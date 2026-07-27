@@ -5,27 +5,28 @@ const BRANDS_DATA = {
     "mario-neto": {
         "brand_name": "Óptica Mário Neto",
         "domain": "www.opticamarioneto.com.br",
+        "hero_image": "mario-neto/glasses_luxury.jpg",
         "theme": {
-            "body_bg": "#07080c", // Deep Charcoal/Black
+            "body_bg": "#091326", // Deep Sapphire Blue of Logo
             "text_color": "#ffffff",
-            "primary_color": "#0b1c3d", // Deep blue
+            "primary_color": "#0b1a36", // Deep blue
             "secondary_color": "#192e62", // Medium-dark blue
             "accent_color": "#213567", // Sapphire Blue of the Logo
-            "glow": "rgba(33, 53, 103, 0.4)",
+            "glow": "rgba(33, 53, 103, 0.55)",
             
             "card_bg": "rgba(255, 255, 255, 0.02)",
             "card_border": "rgba(255, 255, 255, 0.06)",
             "card_text": "#ffffff",
             "card_text_secondary": "rgba(255, 255, 255, 0.65)",
             
-            "navbar_bg": "rgba(7, 8, 12, 0.75)",
+            "navbar_bg": "rgba(9, 19, 38, 0.85)",
             "nav-link-color": "rgba(255, 255, 255, 0.75)",
-            "footer_bg": "#040508",
+            "footer_bg": "#050a14",
             "title_color": "#ffffff",
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "mario-neto/logo/Mario Neto.jpeg", // blue bg, white text logo
+            "logo": "mario-neto/logo/Mario Neto.jpeg",
             "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
@@ -81,6 +82,7 @@ const BRANDS_DATA = {
     "conceicao": {
         "brand_name": "Óptica Conceição",
         "domain": "www.opticaconceicao.com.br",
+        "hero_image": "conceicao/glasses_clean.jpg",
         "theme": {
             "body_bg": "#ffffff", // Light Theme (White background)
             "text_color": "#1e293b", // Slate-800 for body readability
@@ -99,7 +101,7 @@ const BRANDS_DATA = {
             "footer_bg": "#f8fafc", // Very clean gray-blue light footer
             "title_color": "#075691", // Blue page titles
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
             "logo": "conceicao/logo/preto.png", // Black logo on light backgrounds
             "logo_dark_bg": "conceicao/logo/branco.png",
@@ -175,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupNavbar();
     setupCanvas(config.theme.canvas_style, config.theme.body_bg);
     setupBentoGlow();
+    setupScrollAnimations();
     
     document.body.classList.remove("loading");
 });
@@ -246,6 +249,10 @@ function applyBrandConfig(config, brandKey) {
     if (navLogo) navLogo.onerror = () => handleLogoError(navLogo);
     if (footerLogo) footerLogo.onerror = () => handleLogoError(footerLogo);
     
+    // Hero image loading
+    const heroImage = document.getElementById("hero-image");
+    if (heroImage) heroImage.src = config.hero_image;
+    
     // Texts loading
     const footerBrandName = document.getElementById("footer-brand-name");
     const copyrightBrand = document.getElementById("copyright-brand");
@@ -304,8 +311,7 @@ function renderUnidades(unidades) {
     unidades.forEach((u) => {
         const sizeClass = u.size === 'large' ? 'bento-size-large' : (u.size === 'medium' ? 'bento-size-medium' : 'bento-size-small');
         
-        const card = document.createElement("div");
-        card.className = `glass-card bento-card ${sizeClass}`;
+        card.className = `glass-card bento-card reveal-on-scroll ${sizeClass}`;
         
         const telHtml = u.telefone ? `<a href="tel:${u.telefone.replace(/\D/g, '')}" class="phone-link">📞 Telefone: ${u.telefone}</a>` : '';
         const wppMsg = encodeURIComponent(`Olá! Estou acessando o site e gostaria de falar com o atendimento da ${u.nome}.`);
@@ -330,6 +336,9 @@ function renderUnidades(unidades) {
         
         grid.appendChild(card);
     });
+    
+    // Re-initialize animations observer for dynamically generated elements
+    setupScrollAnimations();
 }
 
 // ------------------------------------------------------------
@@ -368,6 +377,29 @@ function setupBentoGlow() {
             card.style.setProperty("--mouse-x", `${x}px`);
             card.style.setProperty("--mouse-y", `${y}px`);
         });
+    });
+}
+
+// ------------------------------------------------------------
+// Scroll Animation Trigger (UX/UI Smooth Entrance)
+// ------------------------------------------------------------
+function setupScrollAnimations() {
+    const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("active");
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll(".reveal-on-scroll").forEach(el => {
+        observer.observe(el);
     });
 }
 

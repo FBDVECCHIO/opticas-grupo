@@ -28,7 +28,13 @@
 /* Mário Neto - Luxury Theme overrides */
 body.mario-neto-theme {
     --title-font: 'Playfair Display', serif;
-    --body-bg: #05070f;
+    --body-bg: #091326; /* Fundo azul-safira oficial */
+    --primary-color: #0b1a36;
+    --secondary-color: #192e62;
+    --accent-color: #213567;
+    --glow-color: rgba(33, 53, 103, 0.55);
+    --navbar-bg: rgba(9, 19, 38, 0.85);
+    --footer-bg: #050a14;
 }
 
 body.mario-neto-theme .hero-title {
@@ -1021,3 +1027,79 @@ body:not(.light-theme) .bento-size-large {
         gap: 20px;
     }
 }
+
+/* ------------------------------------------------------------ */
+/* Scroll Animation Classes (UX/UI Smooth Entrance)            */
+/* ------------------------------------------------------------ */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Cascaded delays for grid structures */
+.bento-card:nth-child(2) { transition-delay: 0.08s; }
+.bento-card:nth-child(3) { transition-delay: 0.16s; }
+.bento-card:nth-child(4) { transition-delay: 0.24s; }
+.bento-card:nth-child(5) { transition-delay: 0.32s; }
+
+.diferencial-card:nth-child(2) { transition-delay: 0.12s; }
+.diferencial-card:nth-child(3) { transition-delay: 0.24s; }
+
+.marca-item:nth-child(2) { transition-delay: 0.08s; }
+.marca-item:nth-child(3) { transition-delay: 0.16s; }
+.marca-item:nth-child(4) { transition-delay: 0.24s; }
+
+/* ------------------------------------------------------------ */
+/* Image Card & Hover Zoom Effects                             */
+/* ------------------------------------------------------------ */
+.img-card {
+    padding: 0 !important;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+body:not(.light-theme) .img-card {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.img-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: block;
+}
+
+.img-card:hover .hero-img {
+    transform: scale(1.08); /* Smooth zooming transition */
+}
+
+.img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 65%, rgba(0, 0, 0, 0.5));
+    pointer-events: none;
+}
+
+body.light-theme .img-overlay {
+    background: linear-gradient(to bottom, transparent 65%, rgba(255, 255, 255, 0.25));
+}
+
