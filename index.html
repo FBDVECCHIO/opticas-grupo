@@ -11,6 +11,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link id="brand-font" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <!-- Three.js and OrbitControls Libraries CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="loading">
@@ -63,12 +68,28 @@
                     </div>
                 </div>
                 <div class="hero-visual reveal-on-scroll">
-                    <div class="glass-card hero-card img-card">
-                        <!-- Photorealistic glasses commercial asset -->
-                        <div class="img-wrapper">
-                            <img id="hero-image" src="" alt="Óculos Premium Destaque" class="hero-img">
-                            <div class="img-overlay"></div>
+                    <div class="glass-card hero-card visual-3d-card">
+                        <!-- 3D Canvas Viewport Container -->
+                        <div id="glasses-3d-container" class="glasses-3d-container">
+                            <!-- Three.js Canvas will be dynamically appended here -->
                         </div>
+                        
+                        <!-- Lens Customizer Simulator Controls -->
+                        <div class="lens-customizer">
+                            <span class="customizer-label">Tecnologia da Lente:</span>
+                            <div class="customizer-buttons">
+                                <button onclick="change3DLens('anti-reflexo', this)" class="btn-lens active" data-lens="anti-reflexo">
+                                    <span class="lens-dot ar-dot"></span> Anti-Reflexo
+                                </button>
+                                <button onclick="change3DLens('filtro-azul', this)" class="btn-lens" data-lens="filtro-azul">
+                                    <span class="lens-dot blue-dot"></span> Filtro Azul
+                                </button>
+                                <button onclick="change3DLens('solar', this)" class="btn-lens" data-lens="solar">
+                                    <span class="lens-dot solar-dot"></span> Lente Solar
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="hero-card-badge">
                             <span class="badge-num" id="badge-years">90+</span>
                             <span class="badge-txt">Anos de Tradição</span>

@@ -136,6 +136,12 @@ const BRANDS_DATA = {
 };
 
 // ------------------------------------------------------------
+// Three.js 3D Eyeglasses Globals
+// ------------------------------------------------------------
+let scene, camera, renderer, glassesGroup, leftLens, rightLens;
+let frameMaterial, metalMaterial, lensMaterial;
+
+// ------------------------------------------------------------
 // Brand Selection Logic
 // ------------------------------------------------------------
 function getActiveBrand() {
@@ -181,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCustomCursor();
     setup3DTilt();
     setupSpotlightBackground();
+    init3DViewer(brandKey);
     
     document.body.classList.remove("loading");
 });
@@ -699,5 +706,217 @@ function setupSpotlightBackground() {
         document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
     });
 }
+
+// ------------------------------------------------------------
+// Three.js 3D Eyeglasses Viewer Engine
+// ------------------------------------------------------------
+function init3DViewer(brandKey) {
+    const container = document.getElementById("glasses-3d-container");
+    if (!container) return;
+    if (typeof THREE === "undefined") {
+        console.warn("Three.js not loaded.");
+        return;
+    }
+    
+    container.innerHTML = "";
+    
+    // 1. Scene
+    scene = new THREE.Scene();
+    
+    // 2. Camera
+    const rect = container.getBoundingClientRect();
+    const aspect = rect.width / (rect.height || 280);
+    camera = new THREE.PerspectiveCamera(38, aspect, 0.1, 100);
+    camera.position.set(0, 0, 7.5);
+    
+    // 3. WebGL Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(rect.width, rect.height || 280);
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+    
+    // 4. OrbitControls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = false; // Prevents interference with page scroll
+    
+    // 5. Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+    scene.add(ambientLight);
+    
+    const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    keyLight.position.set(5, 8, 5);
+    scene.add(keyLight);
+    
+    const fillLight = new THREE.DirectionalLight(brandKey === 'mario-neto' ? 0x3b82f6 : 0x00d2ff, 0.45);
+    fillLight.position.set(-5, -3, 3);
+    scene.add(fillLight);
+    
+    const rimLight = new THREE.PointLight(0xffffff, 0.7, 15);
+    rimLight.position.set(0, 4, -4);
+    scene.add(rimLight);
+    
+    // 6. Materials
+    const isDark = brandKey === 'mario-neto';
+    
+    frameMaterial = new THREE.MeshPhysicalMaterial({
+        color: isDark ? 0x102042 : 0x0f2c59,
+        roughness: 0.1,
+        metalness: 0.05,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.03,
+        transmission: 0.35, // Translúcido
+        thickness: 0.4,
+        transparent: true,
+        opacity: 0.94
+    });
+    
+    metalMaterial = new THREE.MeshStandardMaterial({
+        color: isDark ? 0xd4af37 : 0xd2d6dc, // Gold details for Mario, Silver for Conceicao
+        roughness: 0.1,
+        metalness: 0.95
+    });
+    
+    // Default Anti-Reflexo lens (very transparent, cyan reflection)
+    lensMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x00ffcc,
+        roughness: 0.01,
+        metalness: 0.05,
+        transmission: 0.94,
+        transparent: true,
+        opacity: 0.22,
+        clearcoat: 1.0,
+        ior: 1.52,
+        sheen: 1.0,
+        sheenColor: 0x00ffcc
+    });
+    
+    // 7. Procedural Glasses Modeling
+    glassesGroup = new THREE.Group();
+    
+    // Rims (Aros)
+    const rimRadius = 0.9;
+    const rimWidth = 0.12;
+    const rimGeo = new THREE.TorusGeometry(rimRadius, rimWidth, 16, 48);
+    
+    const leftRim = new THREE.Mesh(rimGeo, frameMaterial);
+    leftRim.position.set(-1.05, 0, 0);
+    leftRim.scale.set(1.18, 0.92, 1);
+    glassesGroup.add(leftRim);
+    
+    const rightRim = new THREE.Mesh(rimGeo, frameMaterial);
+    rightRim.position.set(1.05, 0, 0);
+    rightRim.scale.set(1.18, 0.92, 1);
+    glassesGroup.add(rightRim);
+    
+    // Bridge (Ponte)
+    const bridgeGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.65, 8);
+    const bridge = new THREE.Mesh(bridgeGeo, frameMaterial);
+    bridge.rotation.z = Math.PI / 2;
+    bridge.position.set(0, 0.16, 0.05);
+    glassesGroup.add(bridge);
+    
+    // Lenses (Lentes)
+    const lensGeo = new THREE.CylinderGeometry(rimRadius * 1.12, rimRadius * 1.12, 0.02, 32);
+    
+    leftLens = new THREE.Mesh(lensGeo, lensMaterial);
+    leftLens.rotation.x = Math.PI / 2;
+    leftLens.position.set(-1.05, 0, 0);
+    leftLens.scale.set(1.18, 1, 0.92);
+    glassesGroup.add(leftLens);
+    
+    rightLens = new THREE.Mesh(lensGeo, lensMaterial);
+    rightLens.rotation.x = Math.PI / 2;
+    rightLens.position.set(1.05, 0, 0);
+    rightLens.scale.set(1.18, 1, 0.92);
+    glassesGroup.add(rightLens);
+    
+    // Temples / Arms (Hastes)
+    const armGeo = new THREE.BoxGeometry(0.06, 0.08, 2.4);
+    
+    const leftArm = new THREE.Mesh(armGeo, frameMaterial);
+    leftArm.position.set(-2.1, 0.15, -1.15);
+    leftArm.rotation.y = -Math.PI / 38;
+    glassesGroup.add(leftArm);
+    
+    const rightArm = new THREE.Mesh(armGeo, frameMaterial);
+    rightArm.position.set(2.1, 0.15, -1.15);
+    rightArm.rotation.y = Math.PI / 38;
+    glassesGroup.add(rightArm);
+    
+    // Metal pins
+    const pinGeo = new THREE.SphereGeometry(0.06, 8, 8);
+    const leftPin = new THREE.Mesh(pinGeo, metalMaterial);
+    leftPin.position.set(-2.05, 0.16, 0.08);
+    glassesGroup.add(leftPin);
+    
+    const rightPin = new THREE.Mesh(pinGeo, metalMaterial);
+    rightPin.position.set(2.05, 0.16, 0.08);
+    glassesGroup.add(rightPin);
+    
+    scene.add(glassesGroup);
+    
+    // 8. Auto-Rotation on Scroll + Idle rotation
+    let scrollRotationY = 0;
+    
+    window.addEventListener("scroll", () => {
+        const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        scrollRotationY = scrollPercent * Math.PI * 1.6;
+    });
+    
+    function animate3D() {
+        requestAnimationFrame(animate3D);
+        
+        // Auto-rotation from scroll + smooth waving
+        glassesGroup.rotation.y = scrollRotationY + Date.now() * 0.00035;
+        glassesGroup.rotation.x = Math.sin(Date.now() * 0.0006) * 0.06;
+        
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    
+    animate3D();
+    
+    // Resize handler
+    window.addEventListener("resize", () => {
+        const newRect = container.getBoundingClientRect();
+        camera.aspect = newRect.width / (newRect.height || 280);
+        camera.updateProjectionMatrix();
+        renderer.setSize(newRect.width, newRect.height || 280);
+    });
+}
+
+// ------------------------------------------------------------
+// Interactive Lens Technology Switcher (Global callback)
+// ------------------------------------------------------------
+window.change3DLens = function(type, buttonEl) {
+    document.querySelectorAll(".btn-lens").forEach(btn => btn.classList.remove("active"));
+    if (buttonEl) buttonEl.classList.add("active");
+    
+    if (!lensMaterial) return;
+    
+    if (type === 'anti-reflexo') {
+        lensMaterial.color.setHex(0x00ffcc);
+        lensMaterial.opacity = 0.22;
+        lensMaterial.transmission = 0.94;
+        lensMaterial.sheenColor.setHex(0x00ffcc);
+        lensMaterial.roughness = 0.01;
+    } else if (type === 'filtro-azul') {
+        lensMaterial.color.setHex(0x00d2ff);
+        lensMaterial.opacity = 0.26;
+        lensMaterial.transmission = 0.92;
+        lensMaterial.sheenColor.setHex(0x00d2ff);
+        lensMaterial.roughness = 0.02;
+    } else if (type === 'solar') {
+        lensMaterial.color.setHex(0x111111);
+        lensMaterial.opacity = 0.88;
+        lensMaterial.transmission = 0.05;
+        lensMaterial.sheenColor.setHex(0x333333);
+        lensMaterial.roughness = 0.08;
+    }
+};
+
 
 
