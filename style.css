@@ -21,7 +21,49 @@
     --title-color: #ffffff;
     
     --font-family: 'Montserrat', sans-serif;
+    --title-font: 'Montserrat', sans-serif;
     --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Mário Neto - Luxury Theme overrides */
+body.mario-neto-theme {
+    --title-font: 'Playfair Display', serif;
+    --body-bg: #05070f;
+}
+
+body.mario-neto-theme .hero-title {
+    letter-spacing: -0.5px;
+    font-weight: 800;
+}
+
+body.mario-neto-theme .btn {
+    border-radius: 4px; /* Sharp luxury edges */
+}
+
+body.mario-neto-theme .hero-card-badge {
+    border-radius: 4px;
+}
+
+body.mario-neto-theme .glass-card {
+    border-radius: 6px;
+}
+
+/* Conceição - Modern Tech Theme overrides */
+body.conceicao-theme {
+    --title-font: 'Montserrat', sans-serif;
+    --body-bg: #ffffff;
+}
+
+body.conceicao-theme .btn {
+    border-radius: 35px; /* Friendly rounded tech edges */
+}
+
+body.conceicao-theme .hero-card-badge {
+    border-radius: 20px;
+}
+
+body.conceicao-theme .glass-card {
+    border-radius: 24px;
 }
 
 /* ------------------------------------------------------------ */
@@ -40,6 +82,10 @@ html {
     transition: background-color 0.5s ease;
 }
 
+h1, h2, h3, h4, h5, h6, .hero-tagline, .stat-box h3, .badge-num, .obrigado-title, .faq-title {
+    font-family: var(--title-font);
+}
+
 body {
     font-family: var(--font-family);
     color: var(--text-color);
@@ -48,6 +94,7 @@ body {
     background-color: var(--body-bg);
     transition: background-color 0.5s ease, color 0.5s ease;
 }
+
 
 /* loading transition */
 body.loading {

@@ -185,7 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function applyBrandConfig(config, brandKey) {
     document.title = `${config.brand_name} | Tradição e Confiança Óptica`;
     
-    // Toggle Light Theme helper class on body
+    // Toggle Brand class and Light Theme helper class on body
+    document.body.classList.remove('mario-neto-theme', 'conceicao-theme');
+    document.body.classList.add(`${brandKey}-theme`);
+    
     if (config.theme.body_bg === '#ffffff') {
         document.body.classList.add('light-theme');
     } else {
@@ -400,8 +403,9 @@ function setupCanvas(style, bodyBg) {
         mouse.y = null;
     });
     
+    const isSapphire = style === 'sapphire';
     const particles = [];
-    const particleCount = 60; // Slightly more for the network
+    const particleCount = isSapphire ? 35 : 60; // Menos partículas para a Mário Neto (starry night de luxo)
     const maxDistance = 110;
     const lensRadius = 160;
     
@@ -409,9 +413,9 @@ function setupCanvas(style, bodyBg) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.8,
-            vy: (Math.random() - 0.5) * 0.8,
-            radius: Math.random() * 2 + 1
+            vx: (Math.random() - 0.5) * (isSapphire ? 0.4 : 0.8), // Movimento mais lento e suave para a Mário
+            vy: (Math.random() - 0.5) * (isSapphire ? 0.4 : 0.8),
+            radius: isSapphire ? Math.random() * 4 + 2 : Math.random() * 2 + 1 // Partículas maiores/glowing para a Mário
         });
     }
     
@@ -427,31 +431,27 @@ function setupCanvas(style, bodyBg) {
             nodeColor = 'rgba(33, 53, 103, 0.4)';
             lineColor = 'rgba(33, 53, 103, 0.15)';
             
-            // Subtle ambient dark background gradient
+            // Fundo gradiente profundo para a Mário Neto
             const grad = ctx.createRadialGradient(width*0.5, height*0.5, 0, width*0.5, height*0.5, width*0.8);
-            grad.addColorStop(0, '#0f172a');
-            grad.addColorStop(1, '#07080c');
+            grad.addColorStop(0, '#0c1527');
+            grad.addColorStop(1, '#05070f');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, width, height);
         }
         
-        // 1. Update particles and calculate refracted positions
+        // 1. Atualizar e calcular refração do mouse
         const drawPositions = particles.map(p => {
-            // Move particles
             p.x += p.vx;
             p.y += p.vy;
             
-            // Screen boundaries loop
             if (p.x < 0) p.x = width;
             if (p.x > width) p.x = 0;
             if (p.y < 0) p.y = height;
             if (p.y > height) p.y = 0;
             
-            // Default draw positions
             let dx_draw = p.x;
             let dy_draw = p.y;
             
-            // Magnifying lens refraction calculations
             if (mouse.x !== null) {
                 const dx = p.x - mouse.x;
                 const dy = p.y - mouse.y;
@@ -459,7 +459,6 @@ function setupCanvas(style, bodyBg) {
                 
                 if (dist < lensRadius) {
                     const force = (lensRadius - dist) / lensRadius;
-                    // Push particles outwards simulating lens bending/distortion
                     const distortion = Math.sin(force * Math.PI / 2) * 25;
                     dx_draw += (dx / dist) * distortion;
                     dy_draw += (dy / dist) * distortion;
@@ -469,40 +468,56 @@ function setupCanvas(style, bodyBg) {
             return { x: dx_draw, y: dy_draw, p: p };
         });
         
-        // 2. Draw lines connecting the optical network
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 1;
-        
-        for (let i = 0; i < drawPositions.length; i++) {
-            for (let j = i + 1; j < drawPositions.length; j++) {
-                const p1 = drawPositions[i];
-                const p2 = drawPositions[j];
-                
-                const dx = p1.x - p2.x;
-                const dy = p1.y - p2.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                
-                if (dist < maxDistance) {
-                    const alpha = (maxDistance - dist) / maxDistance;
-                    ctx.strokeStyle = lineColor.replace(/[^,]+(?=\))/, alpha * (style === 'sapphire-light' ? 0.2 : 0.35));
-                    ctx.beginPath();
-                    ctx.moveTo(p1.x, p1.y);
-                    ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
+        // 2. Desenhar as linhas de conexão (APENAS para a Conceição - Estilo Técnico)
+        if (!isSapphire) {
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i < drawPositions.length; i++) {
+                for (let j = i + 1; j < drawPositions.length; j++) {
+                    const p1 = drawPositions[i];
+                    const p2 = drawPositions[j];
+                    
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < maxDistance) {
+                        const alpha = (maxDistance - dist) / maxDistance;
+                        ctx.strokeStyle = lineColor.replace(/[^,]+(?=\))/, alpha * 0.2);
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
                 }
             }
         }
         
-        // 3. Draw particles nodes
+        // 3. Desenhar os nós de partículas (Com gradiente brilhante e suave para a Mário Neto)
         drawPositions.forEach(dp => {
-            ctx.beginPath();
-            ctx.arc(dp.x, dp.y, dp.p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = nodeColor;
-            ctx.fill();
+            if (isSapphire) {
+                // Efeito Starry Night de luxo
+                const radGrad = ctx.createRadialGradient(dp.x, dp.y, 0, dp.x, dp.y, dp.p.radius * 3.5);
+                radGrad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+                radGrad.addColorStop(0.2, 'rgba(33, 53, 103, 0.35)');
+                radGrad.addColorStop(1, 'rgba(33, 53, 103, 0)');
+                ctx.fillStyle = radGrad;
+                ctx.beginPath();
+                ctx.arc(dp.x, dp.y, dp.p.radius * 3.5, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                // Nós retos/técnicos para a Conceição
+                ctx.beginPath();
+                ctx.arc(dp.x, dp.y, dp.p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = nodeColor;
+                ctx.fill();
+            }
         });
         
         requestAnimationFrame(animate);
     }
     
     animate();
+}
 }
