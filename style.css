@@ -98,7 +98,17 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     background-color: var(--body-bg);
+    background-image: radial-gradient(circle 600px at var(--cursor-x, 50vw) var(--cursor-y, 50vh), rgba(33, 53, 103, 0.15) 0%, transparent 100%);
+    background-attachment: fixed;
     transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+body.mario-neto-theme {
+    background-image: radial-gradient(circle 800px at var(--cursor-x, 50vw) var(--cursor-y, 50vh), #102042 0%, #091326 100%) !important;
+}
+
+body.light-theme {
+    background-image: radial-gradient(circle 600px at var(--cursor-x, 50vw) var(--cursor-y, 50vh), #f0f4f8 0%, #ffffff 100%) !important;
 }
 
 
@@ -1033,14 +1043,18 @@ body:not(.light-theme) .bento-size-large {
 /* ------------------------------------------------------------ */
 .reveal-on-scroll {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
+    transform: translateY(32px);
+    filter: blur(8px);
+    letter-spacing: 2px;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform, filter, letter-spacing;
 }
 
 .reveal-on-scroll.active {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
+    letter-spacing: normal;
 }
 
 /* Cascaded delays for grid structures */
@@ -1102,4 +1116,88 @@ body:not(.light-theme) .img-card {
 body.light-theme .img-overlay {
     background: linear-gradient(to bottom, transparent 65%, rgba(255, 255, 255, 0.25));
 }
+
+/* ------------------------------------------------------------ */
+/* Custom Magnetic Cursor & 3D Tilt Layout                     */
+/* ------------------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+    body, a, button, select, input, .marca-item, .bento-card, .btn {
+        cursor: none !important;
+    }
+}
+
+.custom-cursor-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    pointer-events: none;
+    display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .custom-cursor-container {
+        display: block;
+    }
+}
+
+.cursor-dot {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 10000;
+    transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+}
+
+body.mario-neto-theme .cursor-dot {
+    background-color: #3b82f6; /* Bright cyan dot for Mario Neto */
+}
+
+.cursor-ring {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--accent-color);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9999;
+    will-change: width, height, transform, border-color, background-color;
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background-color 0.3s ease;
+}
+
+body.mario-neto-theme .cursor-ring {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.custom-cursor-container.hovering .cursor-ring {
+    width: 48px;
+    height: 48px;
+    border-color: transparent;
+    background-color: rgba(33, 53, 103, 0.15);
+}
+
+body.mario-neto-theme .custom-cursor-container.hovering .cursor-ring {
+    background-color: rgba(59, 130, 246, 0.12);
+}
+
+.custom-cursor-container.hovering .cursor-dot {
+    width: 10px;
+    height: 10px;
+}
+
+/* 3D Tilt Container rules */
+.glass-card, .marca-item, .bento-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    will-change: transform;
+    transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.1s ease;
+}
+
 

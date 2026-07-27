@@ -178,6 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCanvas(config.theme.canvas_style, config.theme.body_bg);
     setupBentoGlow();
     setupScrollAnimations();
+    setupCustomCursor();
+    setup3DTilt();
+    setupSpotlightBackground();
     
     document.body.classList.remove("loading");
 });
@@ -338,8 +341,9 @@ function renderUnidades(unidades) {
         grid.appendChild(card);
     });
     
-    // Re-initialize animations observer for dynamically generated elements
+    // Re-initialize animations observer and 3D Tilt for dynamically generated elements
     setupScrollAnimations();
+    setup3DTilt();
 }
 
 // ------------------------------------------------------------
@@ -436,19 +440,35 @@ function setupCanvas(style, bodyBg) {
         mouse.y = null;
     });
     
+    // Click Shockwave Physics
+    const shockwaves = [];
+    window.addEventListener("click", (e) => {
+        shockwaves.push({
+            x: e.clientX,
+            y: e.clientY,
+            radius: 0,
+            maxRadius: 280,
+            force: 24
+        });
+    });
+    
     const isSapphire = style === 'sapphire';
     const particles = [];
-    const particleCount = isSapphire ? 35 : 60; // Menos partículas para a Mário Neto (starry night de luxo)
+    const particleCount = isSapphire ? 35 : 60;
     const maxDistance = 110;
     const lensRadius = 160;
     
     for (let i = 0; i < particleCount; i++) {
+        const vx = (Math.random() - 0.5) * (isSapphire ? 0.35 : 0.7);
+        const vy = (Math.random() - 0.5) * (isSapphire ? 0.35 : 0.7);
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            vx: (Math.random() - 0.5) * (isSapphire ? 0.4 : 0.8), // Movimento mais lento e suave para a Mário
-            vy: (Math.random() - 0.5) * (isSapphire ? 0.4 : 0.8),
-            radius: isSapphire ? Math.random() * 4 + 2 : Math.random() * 2 + 1 // Partículas maiores/glowing para a Mário
+            vx: vx,
+            vy: vy,
+            baseVx: vx,
+            baseVy: vy,
+            radius: isSapphire ? Math.random() * 4 + 2 : Math.random() * 2 + 1
         });
     }
     
@@ -472,8 +492,34 @@ function setupCanvas(style, bodyBg) {
             ctx.fillRect(0, 0, width, height);
         }
         
-        // 1. Atualizar e calcular refração do mouse
+        // 1. Atualizar raio das ondas de choque
+        shockwaves.forEach((sw, idx) => {
+            sw.radius += 6.5; // velocidade de expansão
+            if (sw.radius > sw.maxRadius) {
+                shockwaves.splice(idx, 1);
+            }
+        });
+        
+        // 2. Atualizar partículas e calcular refração do mouse + ondas de choque
         const drawPositions = particles.map(p => {
+            // Aplicar força da onda de choque
+            shockwaves.forEach(sw => {
+                const dx = p.x - sw.x;
+                const dy = p.y - sw.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist > 0 && Math.abs(dist - sw.radius) < 30) {
+                    // Quanto mais próximo da frente da onda, maior o impulso
+                    const pushFactor = (1 - (Math.abs(dist - sw.radius) / 30)) * sw.force;
+                    p.vx += (dx / dist) * pushFactor * 0.12;
+                    p.vy += (dy / dist) * pushFactor * 0.12;
+                }
+            });
+            
+            // Amortecimento físico para retornar à velocidade básica
+            p.vx += (p.baseVx - p.vx) * 0.04;
+            p.vy += (p.baseVy - p.vy) * 0.04;
+            
+            // Atualizar posições básicas
             p.x += p.vx;
             p.y += p.vy;
             
@@ -485,6 +531,7 @@ function setupCanvas(style, bodyBg) {
             let dx_draw = p.x;
             let dy_draw = p.y;
             
+            // Lente de aumento virtual no mouse
             if (mouse.x !== null) {
                 const dx = p.x - mouse.x;
                 const dy = p.y - mouse.y;
@@ -501,7 +548,7 @@ function setupCanvas(style, bodyBg) {
             return { x: dx_draw, y: dy_draw, p: p };
         });
         
-        // 2. Desenhar as linhas de conexão (APENAS para a Conceição - Estilo Técnico)
+        // 3. Desenhar as linhas de conexão (APENAS para a Conceição - Estilo Técnico)
         if (!isSapphire) {
             ctx.strokeStyle = lineColor;
             ctx.lineWidth = 1;
@@ -527,12 +574,11 @@ function setupCanvas(style, bodyBg) {
             }
         }
         
-        // 3. Desenhar os nós de partículas (Com gradiente brilhante e suave para a Mário Neto)
+        // 4. Desenhar os nós de partículas
         drawPositions.forEach(dp => {
             if (isSapphire) {
-                // Efeito Starry Night de luxo
                 const radGrad = ctx.createRadialGradient(dp.x, dp.y, 0, dp.x, dp.y, dp.p.radius * 3.5);
-                radGrad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+                radGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
                 radGrad.addColorStop(0.2, 'rgba(33, 53, 103, 0.35)');
                 radGrad.addColorStop(1, 'rgba(33, 53, 103, 0)');
                 ctx.fillStyle = radGrad;
@@ -540,7 +586,6 @@ function setupCanvas(style, bodyBg) {
                 ctx.arc(dp.x, dp.y, dp.p.radius * 3.5, 0, Math.PI * 2);
                 ctx.fill();
             } else {
-                // Nós retos/técnicos para a Conceição
                 ctx.beginPath();
                 ctx.arc(dp.x, dp.y, dp.p.radius, 0, Math.PI * 2);
                 ctx.fillStyle = nodeColor;
@@ -548,9 +593,111 @@ function setupCanvas(style, bodyBg) {
             }
         });
         
+        // 5. Desenhar ondas de choque visuais
+        shockwaves.forEach(sw => {
+            ctx.beginPath();
+            ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            const opacity = (sw.maxRadius - sw.radius) / sw.maxRadius;
+            ctx.strokeStyle = isSapphire 
+                ? `rgba(59, 130, 246, ${opacity * 0.18})` 
+                : `rgba(27, 112, 180, ${opacity * 0.22})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        });
+        
         requestAnimationFrame(animate);
     }
     
     animate();
 }
+
+// ------------------------------------------------------------
+// Custom Magnetic Cursor (Spring Physics)
+// ------------------------------------------------------------
+function setupCustomCursor() {
+    const cursorDot = document.querySelector(".cursor-dot");
+    const cursorRing = document.querySelector(".cursor-ring");
+    const cursorContainer = document.getElementById("custom-cursor");
+    if (!cursorDot || !cursorRing) return;
+    
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+    
+    window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
+        cursorDot.style.left = `${mouseX}px`;
+        cursorDot.style.top = `${mouseY}px`;
+    });
+    
+    function updateRing() {
+        // Interpolação linear para física de mola (lag fluido e elegante)
+        const easeFactor = 0.16;
+        ringX += (mouseX - ringX) * easeFactor;
+        ringY += (mouseY - ringY) * easeFactor;
+        
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+        
+        requestAnimationFrame(updateRing);
+    }
+    updateRing();
+    
+    // Hovering states
+    const clickables = "a, button, select, input, textarea, .marca-item, .bento-card, .btn";
+    document.body.addEventListener("mouseover", (e) => {
+        if (e.target.closest(clickables)) {
+            cursorContainer.classList.add("hovering");
+        }
+    });
+    document.body.addEventListener("mouseout", (e) => {
+        if (e.target.closest(clickables)) {
+            cursorContainer.classList.remove("hovering");
+        }
+    });
+}
+
+// ------------------------------------------------------------
+// True 3D Card Hover Tilt
+// ------------------------------------------------------------
+function setup3DTilt() {
+    const cards = document.querySelectorAll(".glass-card, .marca-item, .bento-card");
+    
+    cards.forEach(card => {
+        card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const cardWidth = rect.width;
+            const cardHeight = rect.height;
+            
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const xPercent = (mouseX / cardWidth) - 0.5;
+            const yPercent = (mouseY / cardHeight) - 0.5;
+            
+            const maxRotation = 10; // Rotação suave tridimensional
+            
+            const rotateX = -yPercent * maxRotation;
+            const rotateY = xPercent * maxRotation;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.025, 1.025, 1.025)`;
+        });
+        
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
+        });
+    });
+}
+
+// ------------------------------------------------------------
+// Spotlight Background Coordinator
+// ------------------------------------------------------------
+function setupSpotlightBackground() {
+    window.addEventListener("mousemove", (e) => {
+        document.documentElement.style.setProperty('--cursor-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--cursor-y', `${e.clientY}px`);
+    });
+}
+
 
