@@ -520,4 +520,4 @@ function setupCanvas(style, bodyBg) {
     
     animate();
 }
-}
+
