@@ -311,6 +311,7 @@ function renderUnidades(unidades) {
     unidades.forEach((u) => {
         const sizeClass = u.size === 'large' ? 'bento-size-large' : (u.size === 'medium' ? 'bento-size-medium' : 'bento-size-small');
         
+        const card = document.createElement("div");
         card.className = `glass-card bento-card reveal-on-scroll ${sizeClass}`;
         
         const telHtml = u.telefone ? `<a href="tel:${u.telefone.replace(/\D/g, '')}" class="phone-link">📞 Telefone: ${u.telefone}</a>` : '';
