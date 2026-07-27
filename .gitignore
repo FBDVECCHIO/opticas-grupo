@@ -5,3 +5,9 @@ node_modules/
 .vscode/
 .idea/
 *.log
+
+# Design raw references and heavy source files
+**/*.ai
+**/*.pdf
+**/*.zip
+**/logo concept/

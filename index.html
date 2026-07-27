@@ -10,14 +10,12 @@
     <!-- Google Fonts Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- We'll dynamically append the Google Font stylesheet in JavaScript to avoid blocking, 
-         but we pre-load Montserrat as default -->
-    <link id="brand-font" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link id="brand-font" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="loading">
 
-    <!-- Ambient Canvas Background -->
+    <!-- Ambient Canvas Background (High-Tech Constellation Network) -->
     <canvas id="bg-canvas"></canvas>
 
     <!-- Brand Selection Switcher (Visible only during local testing / URL query) -->
@@ -67,18 +65,19 @@
                 </div>
                 <div class="hero-visual">
                     <div class="glass-card hero-card">
-                        <div class="lens-animation-placeholder">
-                            <!-- SVG representativo de lente e luz -->
-                            <svg viewBox="0 0 200 200" class="lens-svg">
-                                <circle cx="100" cy="100" r="80" class="lens-circle-outer"></circle>
-                                <circle cx="100" cy="100" r="70" class="lens-circle-inner"></circle>
-                                <path d="M 20,100 Q 100,140 180,100" class="light-ray"></path>
-                                <path d="M 20,95 Q 100,85 180,95" class="light-ray-refracted"></path>
-                            </svg>
+                        <!-- Laser refraction optical simulation container -->
+                        <div class="laser-lens-container">
+                            <div class="laser-beam laser-1"></div>
+                            <div class="laser-beam laser-2"></div>
+                            <div class="optical-lens">
+                                <div class="glass-reflection"></div>
+                            </div>
+                            <div class="laser-beam-refracted laser-1-ref"></div>
+                            <div class="laser-beam-refracted laser-2-ref"></div>
                         </div>
                         <div class="hero-card-badge">
                             <span class="badge-num" id="badge-years">90+</span>
-                            <span class="badge-txt">Anos de História</span>
+                            <span class="badge-txt">Anos de Tradição</span>
                         </div>
                     </div>
                 </div>

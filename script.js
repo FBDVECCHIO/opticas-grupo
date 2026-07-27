@@ -6,27 +6,27 @@ const BRANDS_DATA = {
         "brand_name": "Óptica Mário Neto",
         "domain": "www.opticamarioneto.com.br",
         "theme": {
-            "body_bg": "#020205",
+            "body_bg": "#07080c", // Deep Charcoal/Black
             "text_color": "#ffffff",
-            "primary_color": "#0d1b2a",
-            "secondary_color": "#1b263b",
-            "accent_color": "#d4af37",
-            "glow": "rgba(212, 175, 55, 0.35)",
+            "primary_color": "#0b1c3d", // Deep blue
+            "secondary_color": "#192e62", // Medium-dark blue
+            "accent_color": "#213567", // Sapphire Blue of the Logo
+            "glow": "rgba(33, 53, 103, 0.4)",
             
-            "card_bg": "rgba(255, 255, 255, 0.03)",
-            "card_border": "rgba(255, 255, 255, 0.08)",
+            "card_bg": "rgba(255, 255, 255, 0.02)",
+            "card_border": "rgba(255, 255, 255, 0.06)",
             "card_text": "#ffffff",
-            "card_text_secondary": "rgba(255, 255, 255, 0.7)",
+            "card_text_secondary": "rgba(255, 255, 255, 0.65)",
             
-            "navbar_bg": "rgba(2, 2, 5, 0.7)",
+            "navbar_bg": "rgba(7, 8, 12, 0.75)",
             "nav-link-color": "rgba(255, 255, 255, 0.75)",
-            "footer_bg": "#020205",
+            "footer_bg": "#040508",
             "title_color": "#ffffff",
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "mario-neto/logo/logo.png",
-            "canvas_style": "gold"
+            "logo": "mario-neto/logo/Mario Neto.jpeg", // blue bg, white text logo
+            "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
         "fundacao": "1929",
@@ -82,28 +82,28 @@ const BRANDS_DATA = {
         "brand_name": "Óptica Conceição",
         "domain": "www.opticaconceicao.com.br",
         "theme": {
-            "body_bg": "#ffffff",
-            "text_color": "#1e293b",
-            "primary_color": "#075691",
-            "secondary_color": "#1b70b4",
-            "accent_color": "#075691",
-            "glow": "rgba(7, 86, 145, 0.15)",
+            "body_bg": "#ffffff", // Light Theme (White background)
+            "text_color": "#1e293b", // Slate-800 for body readability
+            "primary_color": "#075691", // Official blue 2 (Darker blue)
+            "secondary_color": "#1b70b4", // Official blue 1 (Lighter blue)
+            "accent_color": "#213567", // Shared Sapphire Blue
+            "glow": "rgba(33, 53, 103, 0.15)",
             
-            "card_bg": "rgba(7, 86, 145, 0.04)",
+            "card_bg": "rgba(7, 86, 145, 0.04)", // Soft light blue-tinted card
             "card_border": "rgba(7, 86, 145, 0.1)",
-            "card_text": "#075691",
-            "card_text_secondary": "#475569",
+            "card_text": "#075691", // Blue headers inside cards
+            "card_text_secondary": "#475569", // Gray-600 paragraphs inside cards
             
-            "navbar_bg": "rgba(255, 255, 255, 0.85)",
-            "nav-link-color": "#334155",
-            "footer_bg": "#f8fafc",
-            "title_color": "#075691",
+            "navbar_bg": "rgba(255, 255, 255, 0.85)", // Glass light navbar
+            "nav-link-color": "#334155", // Slate-700 links
+            "footer_bg": "#f8fafc", // Very clean gray-blue light footer
+            "title_color": "#075691", // Blue page titles
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "conceicao/logo/preto.png",
+            "logo": "conceicao/logo/preto.png", // Black logo on light backgrounds
             "logo_dark_bg": "conceicao/logo/branco.png",
-            "canvas_style": "blue-white"
+            "canvas_style": "sapphire-light"
         },
         "history": "Tradição e excelência no cuidado visual. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida.",
         "fundacao": "2026",
@@ -157,7 +157,6 @@ function getActiveBrand() {
 }
 
 function switchBrand(brandKey) {
-    const currentQuery = window.location.search;
     window.location.search = `?brand=${brandKey}`;
 }
 
@@ -175,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     setupNavbar();
     setupCanvas(config.theme.canvas_style, config.theme.body_bg);
+    setupBentoGlow();
     
     document.body.classList.remove("loading");
 });
@@ -233,16 +233,17 @@ function applyBrandConfig(config, brandKey) {
         textLogo.className = "text-logo-alt";
         textLogo.textContent = config.brand_name;
         textLogo.style.fontSize = "20px";
-        textLogo.style.fontWeight = "800";
-        textLogo.style.letterSpacing = "1px";
+        textLogo.style.fontWeight = "900";
+        textLogo.style.letterSpacing = "1.5px";
         textLogo.style.color = "var(--accent-color)";
+        textLogo.style.fontFamily = "var(--font-family)";
         imgEl.parentNode.appendChild(textLogo);
     };
     
     if (navLogo) navLogo.onerror = () => handleLogoError(navLogo);
     if (footerLogo) footerLogo.onerror = () => handleLogoError(footerLogo);
     
-    // Texts loading (guarded to avoid errors on pages where they don't exist)
+    // Texts loading
     const footerBrandName = document.getElementById("footer-brand-name");
     const copyrightBrand = document.getElementById("copyright-brand");
     const heroTagline = document.getElementById("hero-tagline");
@@ -352,6 +353,22 @@ function setupNavbar() {
 }
 
 // ------------------------------------------------------------
+// Bento Card Mouse Light Tracker
+// ------------------------------------------------------------
+function setupBentoGlow() {
+    document.addEventListener("mousemove", (e) => {
+        const cards = document.querySelectorAll(".bento-card, .glass-card");
+        cards.forEach((card) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
+        });
+    });
+}
+
+// ------------------------------------------------------------
 // Canvas Background Particle/Waves Graphics System (60FPS)
 // ------------------------------------------------------------
 function setupCanvas(style, bodyBg) {
@@ -367,74 +384,123 @@ function setupCanvas(style, bodyBg) {
         height = canvas.height = window.innerHeight;
     });
     
+    // Mouse object for lens physical interaction
+    const mouse = {
+        x: null,
+        y: null
+    };
+    
+    window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+    
+    window.addEventListener("mouseleave", () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+    
     const particles = [];
-    const particleCount = 45;
+    const particleCount = 60; // Slightly more for the network
+    const maxDistance = 110;
+    const lensRadius = 160;
     
     for (let i = 0; i < particleCount; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 2 + 0.5,
-            speedX: Math.random() * 0.3 - 0.15,
-            speedY: Math.random() * 0.4 + 0.1,
-            opacity: Math.random() * 0.5 + 0.2
+            vx: (Math.random() - 0.5) * 0.8,
+            vy: (Math.random() - 0.5) * 0.8,
+            radius: Math.random() * 2 + 1
         });
     }
-    
-    let angle = 0;
     
     function animate() {
         ctx.fillStyle = bodyBg;
         ctx.fillRect(0, 0, width, height);
         
-        let pColor, wColor;
-        if (style === 'blue-white') {
-            pColor = 'rgba(7, 86, 145, ';
-            wColor = 'rgba(27, 112, 180, 0.04)';
-        } else {
-            pColor = 'rgba(212, 175, 55, ';
-            wColor = 'rgba(212, 175, 55, 0.04)';
+        let nodeColor, lineColor;
+        if (style === 'sapphire-light') {
+            nodeColor = 'rgba(7, 86, 145, 0.4)';
+            lineColor = 'rgba(27, 112, 180, 0.08)';
+        } else { // sapphire
+            nodeColor = 'rgba(33, 53, 103, 0.4)';
+            lineColor = 'rgba(33, 53, 103, 0.15)';
             
+            // Subtle ambient dark background gradient
             const grad = ctx.createRadialGradient(width*0.5, height*0.5, 0, width*0.5, height*0.5, width*0.8);
-            grad.addColorStop(0, '#1b263b');
-            grad.addColorStop(1, '#020205');
+            grad.addColorStop(0, '#0f172a');
+            grad.addColorStop(1, '#07080c');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, width, height);
-            ctx.fillStyle = wColor;
         }
         
-        ctx.fillStyle = wColor;
-        ctx.beginPath();
-        for (let i = 0; i < width; i += 5) {
-            const y = Math.sin(i * 0.002 + angle) * 60 + (height * 0.5) + Math.cos(i * 0.005 + angle) * 30;
-            ctx.fillRect(i, y, 4, height - y + 100);
-        }
-        
-        ctx.beginPath();
-        for (let i = 0; i < width; i += 5) {
-            const y = Math.sin(i * 0.003 - angle * 0.8) * 40 + (height * 0.6) + Math.sin(i * 0.001 + angle) * 20;
-            ctx.fillRect(i, y, 2, height - y + 100);
-        }
-        
-        particles.forEach(p => {
-            p.x += p.speedX;
-            p.y -= p.speedY;
+        // 1. Update particles and calculate refracted positions
+        const drawPositions = particles.map(p => {
+            // Move particles
+            p.x += p.vx;
+            p.y += p.vy;
             
-            if (p.y < -10) {
-                p.y = height + 10;
-                p.x = Math.random() * width;
-            }
-            if (p.x < -10 || p.x > width + 10) {
-                p.x = Math.random() * width;
+            // Screen boundaries loop
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+            
+            // Default draw positions
+            let dx_draw = p.x;
+            let dy_draw = p.y;
+            
+            // Magnifying lens refraction calculations
+            if (mouse.x !== null) {
+                const dx = p.x - mouse.x;
+                const dy = p.y - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < lensRadius) {
+                    const force = (lensRadius - dist) / lensRadius;
+                    // Push particles outwards simulating lens bending/distortion
+                    const distortion = Math.sin(force * Math.PI / 2) * 25;
+                    dx_draw += (dx / dist) * distortion;
+                    dy_draw += (dy / dist) * distortion;
+                }
             }
             
+            return { x: dx_draw, y: dy_draw, p: p };
+        });
+        
+        // 2. Draw lines connecting the optical network
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < drawPositions.length; i++) {
+            for (let j = i + 1; j < drawPositions.length; j++) {
+                const p1 = drawPositions[i];
+                const p2 = drawPositions[j];
+                
+                const dx = p1.x - p2.x;
+                const dy = p1.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < maxDistance) {
+                    const alpha = (maxDistance - dist) / maxDistance;
+                    ctx.strokeStyle = lineColor.replace(/[^,]+(?=\))/, alpha * (style === 'sapphire-light' ? 0.2 : 0.35));
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+        }
+        
+        // 3. Draw particles nodes
+        drawPositions.forEach(dp => {
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = pColor + p.opacity + ')';
+            ctx.arc(dp.x, dp.y, dp.p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = nodeColor;
             ctx.fill();
         });
         
-        angle += 0.004;
         requestAnimationFrame(animate);
     }
     
