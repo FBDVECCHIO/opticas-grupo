@@ -736,11 +736,77 @@ function init3DViewer(brandKey) {
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
     
-    // 4. OrbitControls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = false; // Prevents interference with page scroll
+    // 4. Custom Drag to Rotate Controls (Lightweight, no external library required)
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    
+    renderer.domElement.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        previousMousePosition = {
+            x: e.offsetX,
+            y: e.offsetY
+        };
+    });
+    
+    renderer.domElement.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaMove = {
+            x: e.offsetX - previousMousePosition.x,
+            y: e.offsetY - previousMousePosition.y
+        };
+        
+        glassesGroup.rotation.y += deltaMove.x * 0.007;
+        glassesGroup.rotation.x += deltaMove.y * 0.007;
+        
+        // Clamp vertical pitch to prevent flipping upside down
+        glassesGroup.rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, glassesGroup.rotation.x));
+        
+        previousMousePosition = {
+            x: e.offsetX,
+            y: e.offsetY
+        };
+    });
+    
+    window.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
+    // Touch mobile support
+    renderer.domElement.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        const touch = e.touches[0];
+        const rect = renderer.domElement.getBoundingClientRect();
+        previousMousePosition = {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
+    });
+    
+    renderer.domElement.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        const rect = renderer.domElement.getBoundingClientRect();
+        const currentX = touch.clientX - rect.left;
+        const currentY = touch.clientY - rect.top;
+        
+        const deltaMove = {
+            x: currentX - previousMousePosition.x,
+            y: currentY - previousMousePosition.y
+        };
+        
+        glassesGroup.rotation.y += deltaMove.x * 0.008;
+        glassesGroup.rotation.x += deltaMove.y * 0.008;
+        glassesGroup.rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, glassesGroup.rotation.x));
+        
+        previousMousePosition = {
+            x: currentX,
+            y: currentY
+        };
+    });
+    
+    window.addEventListener('touchend', () => {
+        isDragging = false;
+    });
     
     // 5. Lighting Setup
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
@@ -870,10 +936,12 @@ function init3DViewer(brandKey) {
         requestAnimationFrame(animate3D);
         
         // Auto-rotation from scroll + smooth waving
-        glassesGroup.rotation.y = scrollRotationY + Date.now() * 0.00035;
-        glassesGroup.rotation.x = Math.sin(Date.now() * 0.0006) * 0.06;
+        // Auto-rotation from scroll + smooth waving (paused slightly when dragging)
+        if (!isDragging) {
+            glassesGroup.rotation.y = scrollRotationY + Date.now() * 0.00035;
+            glassesGroup.rotation.x += (Math.sin(Date.now() * 0.0006) * 0.06 - glassesGroup.rotation.x) * 0.05;
+        }
         
-        controls.update();
         renderer.render(scene, camera);
     }
     
