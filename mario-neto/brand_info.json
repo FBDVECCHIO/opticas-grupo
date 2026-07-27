@@ -1,0 +1,51 @@
+{
+  "brand_name": "Óptica Mário Neto",
+  "theme": {
+    "primary_color": "#0d1b2a",
+    "secondary_color": "#1b263b",
+    "accent_color": "#d4af37",
+    "text_color": "#ffffff",
+    "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap",
+    "font_name": "'Montserrat', sans-serif",
+    "logo_dark_bg": "mario-neto/logo/logo.png",
+    "logo_light_bg": "mario-neto/logo/logo.png"
+  },
+  "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
+  "unidades": [
+    {
+      "nome": "Unidade Centro",
+      "endereco": "Rua Barão de Parnaíba, 429, Botafogo – Campinas/SP",
+      "whatsapp": "5519987061362",
+      "telefone": "(19) 3237-6891",
+      "gmaps_link": "https://maps.google.com/?q=Rua+Barão+de+Parnaíba+429+Campinas"
+    },
+    {
+      "nome": "Unidade Botafogo",
+      "endereco": "Rua Dr. Mascarenhas, 264, Botafogo – Campinas/SP",
+      "whatsapp": "5519981881302",
+      "telefone": "(19) 3235-2279",
+      "gmaps_link": "https://maps.google.com/?q=Rua+Dr+Mascarenhas+264+Campinas"
+    },
+    {
+      "nome": "Unidade Nova Campinas",
+      "endereco": "Av. Dr. Hermas Braga, 96, Nova Campinas – Campinas/SP",
+      "whatsapp": "5519997452138",
+      "telefone": "(19) 2042-1576",
+      "gmaps_link": "https://maps.google.com/?q=Av+Dr+Hermas+Braga+96+Campinas"
+    },
+    {
+      "nome": "Unidade Swiss Park",
+      "endereco": "Av. Antônio Artioli, 570, Bloco B2, Loja 02, Swiss Park Office – Campinas/SP",
+      "whatsapp": "5519983728981",
+      "telefone": "",
+      "gmaps_link": "https://maps.google.com/?q=Av+Antônio+Artioli+570+Campinas"
+    },
+    {
+      "nome": "Unidade Shopping Dom Pedro",
+      "endereco": "Av. Guilherme Campos, 500, Jardim Santa Genebra – Campinas/SP",
+      "whatsapp": "5519989819172",
+      "telefone": "",
+      "gmaps_link": "https://maps.google.com/?q=Shopping+Dom+Pedro+Campinas"
+    }
+  ]
+}

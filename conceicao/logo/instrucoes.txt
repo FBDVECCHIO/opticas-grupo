@@ -1,0 +1,1 @@
+Cole ou salve o arquivo do logotipo da Óptica Conceição nesta pasta (Formatos recomendados: PNG transparente ou SVG). Renomeie o arquivo para "logo.png" ou "logo.svg".

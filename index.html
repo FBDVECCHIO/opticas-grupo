@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Óptica - Carregando...</title>
+    <!-- Default Meta Tags for SEO -->
+    <meta name="description" content="Sua óptica de confiança. Atendimento personalizado, lentes de alta tecnologia e armações das melhores marcas.">
+    <meta name="robots" content="index, follow">
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- We'll dynamically append the Google Font stylesheet in JavaScript to avoid blocking, 
+         but we pre-load Montserrat as default -->
+    <link id="brand-font" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="loading">
+
+    <!-- Ambient Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Brand Selection Switcher (Visible only during local testing / URL query) -->
+    <div id="dev-switcher" class="dev-switcher">
+        <span>Visualizar marca:</span>
+        <button onclick="switchBrand('mario-neto')" class="btn-switch" id="btn-switch-mario">Mário Neto</button>
+        <button onclick="switchBrand('conceicao')" class="btn-switch" id="btn-switch-conceicao">Conceição</button>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo-container">
+                <img id="nav-logo" src="" alt="Logo Óptica" class="nav-logo">
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Abrir Menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <nav class="nav-menu" id="nav-menu">
+                <ul>
+                    <li><a href="#inicio" class="nav-link">Início</a></li>
+                    <li><a href="#unidades" class="nav-link">Unidades</a></li>
+                    <li><a href="#sobre" class="nav-link">Sobre Nós</a></li>
+                    <li><a href="#diferenciais" class="nav-link">Diferenciais</a></li>
+                    <li><a href="#marcas" class="nav-link">Marcas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="inicio" class="hero-section">
+            <div class="hero-glow"></div>
+            <div class="container hero-content">
+                <div class="hero-text-block">
+                    <span class="hero-tagline" id="hero-tagline">Óptica de Tradição</span>
+                    <h1 class="hero-title" id="hero-title">Sua visão com o cuidado que você merece</h1>
+                    <p class="hero-subtitle" id="hero-subtitle">Desde 1929 oferecendo qualidade, honestidade e as melhores lentes do mercado.</p>
+                    <div class="hero-actions">
+                        <a href="#unidades" class="btn btn-primary">Falar com um Especialista</a>
+                        <a href="#sobre" class="btn btn-secondary">Conheça Nossa História</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="glass-card hero-card">
+                        <div class="lens-animation-placeholder">
+                            <!-- SVG representativo de lente e luz -->
+                            <svg viewBox="0 0 200 200" class="lens-svg">
+                                <circle cx="100" cy="100" r="80" class="lens-circle-outer"></circle>
+                                <circle cx="100" cy="100" r="70" class="lens-circle-inner"></circle>
+                                <path d="M 20,100 Q 100,140 180,100" class="light-ray"></path>
+                                <path d="M 20,95 Q 100,85 180,95" class="light-ray-refracted"></path>
+                            </svg>
+                        </div>
+                        <div class="hero-card-badge">
+                            <span class="badge-num" id="badge-years">90+</span>
+                            <span class="badge-txt">Anos de História</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Unidades Bento Grid Section -->
+        <section id="unidades" class="unidades-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nossas <span class="accent-text">Unidades</span></h2>
+                    <p>Selecione a loja mais próxima e fale diretamente conosco via WhatsApp:</p>
+                </div>
+                <div class="bento-grid" id="unidades-grid">
+                    <!-- Cards will be dynamically injected here by script.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Sobre Nós Section -->
+        <section id="sobre" class="sobre-section">
+            <div class="container">
+                <div class="glass-card sobre-card">
+                    <div class="sobre-layout">
+                        <div class="sobre-text">
+                            <h2>Nossa <span class="accent-text">História</span></h2>
+                            <p id="sobre-description">
+                                Carregamos uma longa tradição na valorização do sentido mais importante humano: a visão.
+                            </p>
+                        </div>
+                        <div class="sobre-stats">
+                            <div class="stat-box">
+                                <h3 id="stat-anos">1929</h3>
+                                <p>Fundação</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3>100%</h3>
+                                <p>Certificado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Diferenciais Section -->
+        <section id="diferenciais" class="diferenciais-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Nossos <span class="accent-text">Diferenciais</span></h2>
+                    <p>O que nos destaca no mercado óptico há gerações:</p>
+                </div>
+                <div class="diferenciais-grid">
+                    <div class="glass-card diferencial-card">
+                        <div class="card-icon">🤝</div>
+                        <h3>Atendimento Personalizado</h3>
+                        <p>Entendemos suas reais necessidades visuais para recomendar a melhor solução de lente e armação.</p>
+                    </div>
+                    <div class="glass-card diferencial-card">
+                        <div class="card-icon">🛡️</div>
+                        <h3>Peças com Certificado</h3>
+                        <p>Trabalhamos exclusivamente com produtos originais e certificados de procedência e garantia.</p>
+                    </div>
+                    <div class="glass-card diferencial-card">
+                        <div class="card-icon">✨</div>
+                        <h3>Marcas de Confiança</h3>
+                        <p>Parceria com as maiores fabricantes do mundo, oferecendo tecnologia de ponta para a sua visão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Marcas Section -->
+        <section id="marcas" class="marcas-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Marcas <span class="accent-text">Parceiras</span></h2>
+                    <p>As melhores marcas mundiais de lentes e tratamentos você encontra aqui:</p>
+                </div>
+                <div class="marcas-grid">
+                    <div class="marca-item">
+                        <span>ZEISS</span>
+                    </div>
+                    <div class="marca-item">
+                        <span>Essilor</span>
+                    </div>
+                    <div class="marca-item">
+                        <span>HOYA</span>
+                    </div>
+                    <div class="marca-item">
+                        <span>Personality Lentes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <img id="footer-logo" src="" alt="Logo Rodapé" class="footer-logo">
+                <p id="footer-brand-name">Óptica</p>
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#unidades">Unidades</a></li>
+                    <li><a href="#sobre">Sobre Nós</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 <span id="copyright-brand">Óptica</span>. Todos os direitos reservados. | Desenvolvido com Estética Premium</p>
+        </div>
+    </footer>
+
+    <!-- JS Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
