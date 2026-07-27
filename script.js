@@ -4,6 +4,7 @@
 const BRANDS_DATA = {
     "mario-neto": {
         "brand_name": "Óptica Mário Neto",
+        "domain": "www.opticamarioneto.com.br",
         "theme": {
             "body_bg": "#020205",
             "text_color": "#ffffff",
@@ -29,6 +30,11 @@ const BRANDS_DATA = {
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
         "fundacao": "1929",
+        "stats": {
+            "modelos": "2.000+",
+            "lojas": "5",
+            "anos": "90+"
+        },
         "unidades": [
             {
                 "nome": "Unidade Centro (Matriz)",
@@ -74,32 +80,38 @@ const BRANDS_DATA = {
     },
     "conceicao": {
         "brand_name": "Óptica Conceição",
+        "domain": "www.opticaconceicao.com.br",
         "theme": {
-            "body_bg": "#ffffff", // Light Theme (White background)
-            "text_color": "#1e293b", // Slate-800 for body readability
-            "primary_color": "#075691", // Official blue 2 (Darker blue)
-            "secondary_color": "#1b70b4", // Official blue 1 (Lighter blue)
-            "accent_color": "#075691", // The blue highlight
+            "body_bg": "#ffffff",
+            "text_color": "#1e293b",
+            "primary_color": "#075691",
+            "secondary_color": "#1b70b4",
+            "accent_color": "#075691",
             "glow": "rgba(7, 86, 145, 0.15)",
             
-            "card_bg": "rgba(7, 86, 145, 0.04)", // Soft light blue-tinted card
+            "card_bg": "rgba(7, 86, 145, 0.04)",
             "card_border": "rgba(7, 86, 145, 0.1)",
-            "card_text": "#075691", // Blue headers inside cards
-            "card_text_secondary": "#475569", // Gray-600 paragraphs inside cards
+            "card_text": "#075691",
+            "card_text_secondary": "#475569",
             
-            "navbar_bg": "rgba(255, 255, 255, 0.85)", // Glass light navbar
-            "nav-link-color": "#334155", // Slate-700 links
-            "footer_bg": "#f8fafc", // Very clean gray-blue light footer
-            "title_color": "#075691", // Blue page titles
+            "navbar_bg": "rgba(255, 255, 255, 0.85)",
+            "nav-link-color": "#334155",
+            "footer_bg": "#f8fafc",
+            "title_color": "#075691",
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "conceicao/logo/preto.png", // Black logo on light backgrounds
+            "logo": "conceicao/logo/preto.png",
             "logo_dark_bg": "conceicao/logo/branco.png",
             "canvas_style": "blue-white"
         },
         "history": "Tradição e excelência no cuidado visual. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida.",
         "fundacao": "2026",
+        "stats": {
+            "modelos": "1.500+",
+            "lojas": "2",
+            "anos": "Premium"
+        },
         "unidades": [
             {
                 "nome": "Unidade Conceição 1084",
@@ -145,6 +157,7 @@ function getActiveBrand() {
 }
 
 function switchBrand(brandKey) {
+    const currentQuery = window.location.search;
     window.location.search = `?brand=${brandKey}`;
 }
 
@@ -215,7 +228,6 @@ function applyBrandConfig(config, brandKey) {
     
     const handleLogoError = (imgEl) => {
         imgEl.style.display = "none";
-        // prevent duplicating text helper
         if (imgEl.parentNode.querySelector(".text-logo-alt")) return;
         const textLogo = document.createElement("span");
         textLogo.className = "text-logo-alt";
@@ -230,7 +242,7 @@ function applyBrandConfig(config, brandKey) {
     if (navLogo) navLogo.onerror = () => handleLogoError(navLogo);
     if (footerLogo) footerLogo.onerror = () => handleLogoError(footerLogo);
     
-    // Texts loading
+    // Texts loading (guarded to avoid errors on pages where they don't exist)
     const footerBrandName = document.getElementById("footer-brand-name");
     const copyrightBrand = document.getElementById("copyright-brand");
     const heroTagline = document.getElementById("hero-tagline");
@@ -255,6 +267,23 @@ function applyBrandConfig(config, brandKey) {
     }
     
     if (sobreDescription) sobreDescription.textContent = config.history;
+    
+    // Obrigado.html specific elements rendering
+    const btnShareWpp = document.getElementById("btn-share-whatsapp");
+    const statModelos = document.getElementById("stat-modelos");
+    const statLojas = document.getElementById("stat-lojas");
+    const statAnosObrigado = document.getElementById("stat-anos-obrigado");
+    
+    if (btnShareWpp) {
+        const shareText = brandKey === 'conceicao' 
+            ? `Oi! Me cadastrei para receber vantagens exclusivas na Óptica Conceição. Dá uma olhada e garanta a sua também no link: https://${config.domain}`
+            : `Oi! Acabei de garantir ofertas de descontos na Óptica Mário Neto. Garanta o seu também no link: https://${config.domain}`;
+        btnShareWpp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+    }
+    
+    if (statModelos) statModelos.textContent = config.stats.modelos;
+    if (statLojas) statLojas.textContent = config.stats.lojas;
+    if (statAnosObrigado) statAnosObrigado.textContent = config.stats.anos;
     
     renderUnidades(config.unidades);
 }
@@ -355,30 +384,25 @@ function setupCanvas(style, bodyBg) {
     let angle = 0;
     
     function animate() {
-        // Clear canvas with body background to support theme switching seamlessly
         ctx.fillStyle = bodyBg;
         ctx.fillRect(0, 0, width, height);
         
         let pColor, wColor;
         if (style === 'blue-white') {
-            // Light theme waves (highly transparent blue)
             pColor = 'rgba(7, 86, 145, ';
             wColor = 'rgba(27, 112, 180, 0.04)';
         } else {
-            // Dark theme waves (highly transparent gold)
             pColor = 'rgba(212, 175, 55, ';
             wColor = 'rgba(212, 175, 55, 0.04)';
             
-            // Add custom background ambient glow for dark theme
             const grad = ctx.createRadialGradient(width*0.5, height*0.5, 0, width*0.5, height*0.5, width*0.8);
             grad.addColorStop(0, '#1b263b');
             grad.addColorStop(1, '#020205');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, width, height);
-            ctx.fillStyle = wColor; // reset fill
+            ctx.fillStyle = wColor;
         }
         
-        // Draw Wave 1
         ctx.fillStyle = wColor;
         ctx.beginPath();
         for (let i = 0; i < width; i += 5) {
@@ -386,14 +410,12 @@ function setupCanvas(style, bodyBg) {
             ctx.fillRect(i, y, 4, height - y + 100);
         }
         
-        // Draw Wave 2
         ctx.beginPath();
         for (let i = 0; i < width; i += 5) {
             const y = Math.sin(i * 0.003 - angle * 0.8) * 40 + (height * 0.6) + Math.sin(i * 0.001 + angle) * 20;
             ctx.fillRect(i, y, 2, height - y + 100);
         }
         
-        // Draw Particles
         particles.forEach(p => {
             p.x += p.speedX;
             p.y -= p.speedY;
