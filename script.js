@@ -1,4 +1,11 @@
 // ------------------------------------------------------------
+// Loader Safety Net Fallback (Prevents stuck loading screen)
+// ------------------------------------------------------------
+setTimeout(() => {
+    document.body.classList.remove("loading");
+}, 1200);
+
+// ------------------------------------------------------------
 // Local Data Config (Pre-loaded to prevent browser CORS blocks)
 // ------------------------------------------------------------
 const BRANDS_DATA = {
@@ -178,17 +185,62 @@ document.addEventListener("DOMContentLoaded", () => {
     const switcherBtn = document.getElementById(`btn-switch-${brandKey}`);
     if (switcherBtn) switcherBtn.classList.add('active');
     
-    applyBrandConfig(config, brandKey);
+    // Multi-try initialization system (fully isolates errors so the page loader always unlocks)
+    try {
+        applyBrandConfig(config, brandKey);
+    } catch (e) {
+        console.error("Failed applyBrandConfig:", e);
+    }
     
-    setupNavbar();
-    setupCanvas(config.theme.canvas_style, config.theme.body_bg);
-    setupBentoGlow();
-    setupScrollAnimations();
-    setupCustomCursor();
-    setup3DTilt();
-    setupSpotlightBackground();
-    init3DViewer(brandKey);
+    try {
+        setupNavbar();
+    } catch (e) {
+        console.error("Failed setupNavbar:", e);
+    }
     
+    try {
+        setupCanvas(config.theme.canvas_style, config.theme.body_bg);
+    } catch (e) {
+        console.error("Failed setupCanvas:", e);
+    }
+    
+    try {
+        setupBentoGlow();
+    } catch (e) {
+        console.error("Failed setupBentoGlow:", e);
+    }
+    
+    try {
+        setupScrollAnimations();
+    } catch (e) {
+        console.error("Failed setupScrollAnimations:", e);
+    }
+    
+    try {
+        setupCustomCursor();
+    } catch (e) {
+        console.error("Failed setupCustomCursor:", e);
+    }
+    
+    try {
+        setup3DTilt();
+    } catch (e) {
+        console.error("Failed setup3DTilt:", e);
+    }
+    
+    try {
+        setupSpotlightBackground();
+    } catch (e) {
+        console.error("Failed setupSpotlightBackground:", e);
+    }
+    
+    try {
+        init3DViewer(brandKey);
+    } catch (e) {
+        console.error("Failed init3DViewer:", e);
+    }
+    
+    // Always unlock loader finally
     document.body.classList.remove("loading");
 });
 
@@ -278,11 +330,12 @@ function applyBrandConfig(config, brandKey) {
     
     if (brandKey === 'conceicao') {
         if (heroTagline) heroTagline.textContent = "Cuidado Visual Completo";
-        if (heroTitle) heroTitle.textContent = "Excelência Óptica e Atendimento Familiar";
-        if (heroSubtitle) heroSubtitle.textContent = "Sua visão tratada por profissionais altamente experientes com lentes de alta tecnologia.";
+        if (heroTitle) heroTitle.innerHTML = "Excelência Óptica & <span class='outline-text'>Atendimento Familiar</span>";
+        if (heroSubtitle) heroSubtitle.textContent = "Sua visão tratada por profissionais experientes com lentes de alta tecnologia.";
         if (badgeYears) badgeYears.textContent = "Premium";
         if (statAnos) statAnos.textContent = "Qualidade";
     } else {
+        if (heroTitle) heroTitle.innerHTML = "Sua <em>visão</em> com o cuidado que você <em>merece</em>";
         if (badgeYears) badgeYears.textContent = "90+";
         if (statAnos) statAnos.textContent = "1929";
     }
