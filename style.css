@@ -221,7 +221,7 @@ body.light-theme .navbar.scrolled {
 
 .nav-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center links menu capsule */
     align-items: center;
     height: 64px;
     padding: 0;
@@ -229,20 +229,24 @@ body.light-theme .navbar.scrolled {
 }
 
 .nav-logo-container {
+    position: fixed;
+    top: 24px;
+    left: 4%;
+    z-index: 101; /* Floats freely on the left side of viewport */
     display: flex;
     align-items: center;
-    height: 100%;
+    height: 64px;
 }
 
 .nav-logo {
-    max-height: 38px; /* More compact logo height */
+    max-height: 52px; /* Much larger on desktop */
     width: auto;
     object-fit: contain;
     transition: var(--transition-smooth);
 }
 
 body.conceicao-theme .nav-logo {
-    max-height: 46px; /* Slightly larger, matching Mario Neto logo proportions */
+    max-height: 60px; /* Even larger for Conceicao logo */
 }
 
 .nav-menu ul {
@@ -1011,9 +1015,14 @@ body.conceicao-theme .foundation-3d-text {
 }
 
 .footer-logo {
-    max-height: 45px;
+    max-height: 60px; /* Much larger */
     width: auto;
     object-fit: contain;
+    transition: var(--transition-smooth);
+}
+
+body.conceicao-theme .footer-logo {
+    max-height: 72px; /* Even larger for landscape Conceicao logo */
 }
 
 .footer-brand p {
@@ -1108,7 +1117,16 @@ body.conceicao-theme .foundation-3d-text {
 }
 
 @media (max-width: 768px) {
+    .nav-logo-container {
+        position: static;
+        height: auto;
+    }
+    .nav-logo {
+        max-height: 32px !important;
+    }
     .nav-container {
+        justify-content: space-between !important;
+        padding: 0 20px !important;
         height: 80px;
     }
     
@@ -1543,6 +1561,12 @@ body.mario-neto-theme .hero-title em {
 
 body.mario-neto-theme .outline-text {
     -webkit-text-stroke: 1.5px #3b82f6;
+}
+
+body.conceicao-theme .outline-text {
+    color: #64748b !important; /* Soft premium slate gray fill */
+    -webkit-text-stroke: none !important; /* Remove borders/outlines */
+    font-weight: 800;
 }
 
 /* ------------------------------------------------------------ */
