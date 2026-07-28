@@ -241,6 +241,10 @@ body.light-theme .navbar.scrolled {
     transition: var(--transition-smooth);
 }
 
+body.conceicao-theme .nav-logo {
+    max-height: 46px; /* Slightly larger, matching Mario Neto logo proportions */
+}
+
 .nav-menu ul {
     display: flex;
     list-style: none;

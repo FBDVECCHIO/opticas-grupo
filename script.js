@@ -114,12 +114,12 @@ const BRANDS_DATA = {
             "logo_dark_bg": "conceicao/logo/branco.png",
             "canvas_style": "sapphire-light"
         },
-        "history": "Tradição e excelência no cuidado visual. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida.",
-        "fundacao": "2026",
+        "history": "Tradição e excelência no cuidado visual desde 1956. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida. São mais de 70 anos cuidando de sua visão.",
+        "fundacao": "1956",
         "stats": {
             "modelos": "1.500+",
             "lojas": "2",
-            "anos": "Premium"
+            "anos": "70+"
         },
         "unidades": [
             {
@@ -346,16 +346,20 @@ function applyBrandConfig(config, brandKey) {
     if (footerBrandName) footerBrandName.textContent = config.brand_name;
     if (copyrightBrand) copyrightBrand.textContent = config.brand_name;
     
+    const sealTextPath = document.querySelector(".authenticity-seal textPath");
+    
     if (brandKey === 'conceicao') {
         if (heroTagline) heroTagline.textContent = "Cuidado Visual Completo";
         if (heroTitle) heroTitle.innerHTML = "Excelência Óptica & <span class='outline-text'>Atendimento Familiar</span>";
         if (heroSubtitle) heroSubtitle.textContent = "Sua visão tratada por profissionais experientes com lentes de alta tecnologia.";
-        if (badgeYears) badgeYears.textContent = "Premium";
-        if (statAnos) statAnos.textContent = "Qualidade";
+        if (badgeYears) badgeYears.textContent = "70+";
+        if (statAnos) statAnos.textContent = "1956";
+        if (sealTextPath) sealTextPath.textContent = "MAIS DE 70 ANOS CUIDANDO DA VISÃO DOS BRASILEIROS •";
     } else {
         if (heroTitle) heroTitle.innerHTML = "Sua <em>visão</em> com o cuidado <br class='desktop-br'> que você <em>merece</em>";
         if (badgeYears) badgeYears.textContent = "90+";
         if (statAnos) statAnos.textContent = "1929";
+        if (sealTextPath) sealTextPath.textContent = "HÁ 90 ANOS CUIDANDO DA VISÃO DOS BRASILEIROS •";
     }
     
     if (sobreDescription) sobreDescription.textContent = config.history;
