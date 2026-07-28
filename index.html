@@ -60,7 +60,7 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
+        <!-- Hero Section (Full-Screen Image Background) -->
         <section id="inicio" class="hero-section">
             <div class="hero-glow"></div>
             
@@ -72,7 +72,8 @@
                 <div class="floating-lens-ring ring-1"></div>
             </div>
 
-            <div class="container hero-content">
+            <!-- Centralized Content Layer -->
+            <div class="container hero-content-centered">
                 <div class="hero-text-block reveal-on-scroll">
                     <span class="hero-tagline" id="hero-tagline">Óptica de Tradição</span>
                     <h1 class="hero-title" id="hero-title">Sua visão com o cuidado que você merece</h1>
@@ -80,35 +81,6 @@
                     <div class="hero-actions">
                         <a href="#unidades" class="btn btn-primary">Falar com um Especialista</a>
                         <a href="#sobre" class="btn btn-secondary">Conheça Nossa História</a>
-                    </div>
-                </div>
-                <div class="hero-visual reveal-on-scroll">
-                    <div class="glass-card hero-card visual-3d-card">
-                        <!-- 3D Canvas Viewport Container -->
-                        <div id="glasses-3d-container" class="glasses-3d-container">
-                            <!-- Three.js Canvas will be dynamically appended here -->
-                        </div>
-                        
-                        <!-- Lens Customizer Simulator Controls -->
-                        <div class="lens-customizer">
-                            <span class="customizer-label">Tecnologia da Lente:</span>
-                            <div class="customizer-buttons">
-                                <button onclick="change3DLens('anti-reflexo', this)" class="btn-lens active" data-lens="anti-reflexo">
-                                    <span class="lens-dot ar-dot"></span> Anti-Reflexo
-                                </button>
-                                <button onclick="change3DLens('filtro-azul', this)" class="btn-lens" data-lens="filtro-azul">
-                                    <span class="lens-dot blue-dot"></span> Filtro Azul
-                                </button>
-                                <button onclick="change3DLens('solar', this)" class="btn-lens" data-lens="solar">
-                                    <span class="lens-dot solar-dot"></span> Lente Solar
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="hero-card-badge">
-                            <span class="badge-num" id="badge-years">90+</span>
-                            <span class="badge-txt">Anos de Tradição</span>
-                        </div>
                     </div>
                 </div>
             </div>

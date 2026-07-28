@@ -233,17 +233,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) {
         console.error("Failed setupSpotlightBackground:", e);
     }
-    
     try {
         setupParallaxLenses();
     } catch (e) {
         console.error("Failed setupParallaxLenses:", e);
-    }
-    
-    try {
-        init3DViewer(brandKey);
-    } catch (e) {
-        console.error("Failed init3DViewer:", e);
     }
     
     // Always unlock loader finally
@@ -317,9 +310,11 @@ function applyBrandConfig(config, brandKey) {
     if (navLogo) navLogo.onerror = () => handleLogoError(navLogo);
     if (footerLogo) footerLogo.onerror = () => handleLogoError(footerLogo);
     
-    // Hero image loading
-    const heroImage = document.getElementById("hero-image");
-    if (heroImage) heroImage.src = config.hero_image;
+    // Hero background image loading (Full screen viewport)
+    const heroSection = document.querySelector(".hero-section");
+    if (heroSection) {
+        heroSection.style.backgroundImage = `url('${config.hero_image}')`;
+    }
     
     // Texts loading
     const footerBrandName = document.getElementById("footer-brand-name");
@@ -378,10 +373,8 @@ function renderUnidades(unidades) {
     grid.innerHTML = "";
     
     unidades.forEach((u) => {
-        const sizeClass = u.size === 'large' ? 'bento-size-large' : (u.size === 'medium' ? 'bento-size-medium' : 'bento-size-small');
-        
         const card = document.createElement("div");
-        card.className = `glass-card bento-card reveal-on-scroll ${sizeClass}`;
+        card.className = `glass-card bento-card reveal-on-scroll`;
         
         const telHtml = u.telefone ? `<a href="tel:${u.telefone.replace(/\D/g, '')}" class="phone-link">📞 Telefone: ${u.telefone}</a>` : '';
         const wppMsg = encodeURIComponent(`Olá! Estou acessando o site e gostaria de falar com o atendimento da ${u.nome}.`);
@@ -766,284 +759,7 @@ function setupSpotlightBackground() {
     });
 }
 
-// ------------------------------------------------------------
-// Three.js 3D Eyeglasses Viewer Engine
-// ------------------------------------------------------------
-function init3DViewer(brandKey) {
-    const container = document.getElementById("glasses-3d-container");
-    if (!container) return;
-    if (typeof THREE === "undefined") {
-        console.warn("Three.js not loaded.");
-        return;
-    }
-    
-    container.innerHTML = "";
-    
-    // 1. Scene
-    scene = new THREE.Scene();
-    
-    // 2. Camera
-    const rect = container.getBoundingClientRect();
-    const aspect = rect.width / (rect.height || 280);
-    camera = new THREE.PerspectiveCamera(38, aspect, 0.1, 100);
-    camera.position.set(0, 0, 7.5);
-    
-    // 3. WebGL Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(rect.width, rect.height || 280);
-    renderer.shadowMap.enabled = true;
-    container.appendChild(renderer.domElement);
-    
-    // 4. Custom Drag to Rotate Controls (Lightweight, no external library required)
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    
-    renderer.domElement.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        previousMousePosition = {
-            x: e.offsetX,
-            y: e.offsetY
-        };
-    });
-    
-    renderer.domElement.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const deltaMove = {
-            x: e.offsetX - previousMousePosition.x,
-            y: e.offsetY - previousMousePosition.y
-        };
-        
-        glassesGroup.rotation.y += deltaMove.x * 0.007;
-        glassesGroup.rotation.x += deltaMove.y * 0.007;
-        
-        // Clamp vertical pitch to prevent flipping upside down
-        glassesGroup.rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, glassesGroup.rotation.x));
-        
-        previousMousePosition = {
-            x: e.offsetX,
-            y: e.offsetY
-        };
-    });
-    
-    window.addEventListener('mouseup', () => {
-        isDragging = false;
-    });
-    
-    // Touch mobile support
-    renderer.domElement.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        const touch = e.touches[0];
-        const rect = renderer.domElement.getBoundingClientRect();
-        previousMousePosition = {
-            x: touch.clientX - rect.left,
-            y: touch.clientY - rect.top
-        };
-    });
-    
-    renderer.domElement.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const touch = e.touches[0];
-        const rect = renderer.domElement.getBoundingClientRect();
-        const currentX = touch.clientX - rect.left;
-        const currentY = touch.clientY - rect.top;
-        
-        const deltaMove = {
-            x: currentX - previousMousePosition.x,
-            y: currentY - previousMousePosition.y
-        };
-        
-        glassesGroup.rotation.y += deltaMove.x * 0.008;
-        glassesGroup.rotation.x += deltaMove.y * 0.008;
-        glassesGroup.rotation.x = Math.max(-Math.PI / 4, Math.min(Math.PI / 4, glassesGroup.rotation.x));
-        
-        previousMousePosition = {
-            x: currentX,
-            y: currentY
-        };
-    });
-    
-    window.addEventListener('touchend', () => {
-        isDragging = false;
-    });
-    
-    // 5. Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    scene.add(ambientLight);
-    
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    keyLight.position.set(5, 8, 5);
-    scene.add(keyLight);
-    
-    const fillLight = new THREE.DirectionalLight(brandKey === 'mario-neto' ? 0x3b82f6 : 0x00d2ff, 0.45);
-    fillLight.position.set(-5, -3, 3);
-    scene.add(fillLight);
-    
-    const rimLight = new THREE.PointLight(0xffffff, 0.7, 15);
-    rimLight.position.set(0, 4, -4);
-    scene.add(rimLight);
-    
-    // 6. Materials
-    const isDark = brandKey === 'mario-neto';
-    
-    frameMaterial = new THREE.MeshPhysicalMaterial({
-        color: isDark ? 0x102042 : 0x0f2c59,
-        roughness: 0.1,
-        metalness: 0.05,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.03,
-        transmission: 0.35, // Translúcido
-        thickness: 0.4,
-        transparent: true,
-        opacity: 0.94
-    });
-    
-    metalMaterial = new THREE.MeshStandardMaterial({
-        color: isDark ? 0xd4af37 : 0xd2d6dc, // Gold details for Mario, Silver for Conceicao
-        roughness: 0.1,
-        metalness: 0.95
-    });
-    
-    // Default Anti-Reflexo lens (very transparent, cyan reflection)
-    lensMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x00ffcc,
-        roughness: 0.01,
-        metalness: 0.05,
-        transmission: 0.94,
-        transparent: true,
-        opacity: 0.22,
-        clearcoat: 1.0,
-        ior: 1.52,
-        sheen: 1.0,
-        sheenColor: 0x00ffcc
-    });
-    
-    // 7. Procedural Glasses Modeling
-    glassesGroup = new THREE.Group();
-    
-    // Rims (Aros)
-    const rimRadius = 0.9;
-    const rimWidth = 0.12;
-    const rimGeo = new THREE.TorusGeometry(rimRadius, rimWidth, 16, 48);
-    
-    const leftRim = new THREE.Mesh(rimGeo, frameMaterial);
-    leftRim.position.set(-1.05, 0, 0);
-    leftRim.scale.set(1.18, 0.92, 1);
-    glassesGroup.add(leftRim);
-    
-    const rightRim = new THREE.Mesh(rimGeo, frameMaterial);
-    rightRim.position.set(1.05, 0, 0);
-    rightRim.scale.set(1.18, 0.92, 1);
-    glassesGroup.add(rightRim);
-    
-    // Bridge (Ponte)
-    const bridgeGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.65, 8);
-    const bridge = new THREE.Mesh(bridgeGeo, frameMaterial);
-    bridge.rotation.z = Math.PI / 2;
-    bridge.position.set(0, 0.16, 0.05);
-    glassesGroup.add(bridge);
-    
-    // Lenses (Lentes)
-    const lensGeo = new THREE.CylinderGeometry(rimRadius * 1.12, rimRadius * 1.12, 0.02, 32);
-    
-    leftLens = new THREE.Mesh(lensGeo, lensMaterial);
-    leftLens.rotation.x = Math.PI / 2;
-    leftLens.position.set(-1.05, 0, 0);
-    leftLens.scale.set(1.18, 1, 0.92);
-    glassesGroup.add(leftLens);
-    
-    rightLens = new THREE.Mesh(lensGeo, lensMaterial);
-    rightLens.rotation.x = Math.PI / 2;
-    rightLens.position.set(1.05, 0, 0);
-    rightLens.scale.set(1.18, 1, 0.92);
-    glassesGroup.add(rightLens);
-    
-    // Temples / Arms (Hastes)
-    const armGeo = new THREE.BoxGeometry(0.06, 0.08, 2.4);
-    
-    const leftArm = new THREE.Mesh(armGeo, frameMaterial);
-    leftArm.position.set(-2.1, 0.15, -1.15);
-    leftArm.rotation.y = -Math.PI / 38;
-    glassesGroup.add(leftArm);
-    
-    const rightArm = new THREE.Mesh(armGeo, frameMaterial);
-    rightArm.position.set(2.1, 0.15, -1.15);
-    rightArm.rotation.y = Math.PI / 38;
-    glassesGroup.add(rightArm);
-    
-    // Metal pins
-    const pinGeo = new THREE.SphereGeometry(0.06, 8, 8);
-    const leftPin = new THREE.Mesh(pinGeo, metalMaterial);
-    leftPin.position.set(-2.05, 0.16, 0.08);
-    glassesGroup.add(leftPin);
-    
-    const rightPin = new THREE.Mesh(pinGeo, metalMaterial);
-    rightPin.position.set(2.05, 0.16, 0.08);
-    glassesGroup.add(rightPin);
-    
-    scene.add(glassesGroup);
-    
-    // 8. Auto-Rotation on Scroll + Idle rotation
-    let scrollRotationY = 0;
-    
-    window.addEventListener("scroll", () => {
-        const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-        scrollRotationY = scrollPercent * Math.PI * 1.6;
-    });
-    
-    function animate3D() {
-        requestAnimationFrame(animate3D);
-        
-        // Auto-rotation from scroll + smooth waving
-        // Auto-rotation from scroll + smooth waving (paused slightly when dragging)
-        if (!isDragging) {
-            glassesGroup.rotation.y = scrollRotationY + Date.now() * 0.00035;
-            glassesGroup.rotation.x += (Math.sin(Date.now() * 0.0006) * 0.06 - glassesGroup.rotation.x) * 0.05;
-        }
-        
-        renderer.render(scene, camera);
-    }
-    
-    animate3D();
-    
-    // Resize handler
-    window.addEventListener("resize", () => {
-        const newRect = container.getBoundingClientRect();
-        camera.aspect = newRect.width / (newRect.height || 280);
-        camera.updateProjectionMatrix();
-        renderer.setSize(newRect.width, newRect.height || 280);
-    });
-}
 
-// ------------------------------------------------------------
-// Interactive Lens Technology Switcher (Global callback)
-// ------------------------------------------------------------
-window.change3DLens = function(type, buttonEl) {
-    document.querySelectorAll(".btn-lens").forEach(btn => btn.classList.remove("active"));
-    if (buttonEl) buttonEl.classList.add("active");
-    
-    if (!lensMaterial) return;
-    
-    if (type === 'anti-reflexo') {
-        lensMaterial.color.setHex(0x00ffcc);
-        lensMaterial.opacity = 0.22;
-        lensMaterial.transmission = 0.94;
-        lensMaterial.sheenColor.setHex(0x00ffcc);
-        lensMaterial.roughness = 0.01;
-    } else if (type === 'filtro-azul') {
-        lensMaterial.color.setHex(0x00d2ff);
-        lensMaterial.opacity = 0.26;
-        lensMaterial.transmission = 0.92;
-        lensMaterial.sheenColor.setHex(0x00d2ff);
-        lensMaterial.roughness = 0.02;
-    } else if (type === 'solar') {
-        lensMaterial.color.setHex(0x111111);
-        lensMaterial.opacity = 0.88;
-        lensMaterial.transmission = 0.05;
-        lensMaterial.sheenColor.setHex(0x333333);
-        lensMaterial.roughness = 0.08;
-    }
-};
 
 // ------------------------------------------------------------
 // Floating Parallax Lenses Transition System
