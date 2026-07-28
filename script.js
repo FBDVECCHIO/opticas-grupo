@@ -33,7 +33,7 @@ const BRANDS_DATA = {
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "mario-neto/logo/logo_branco.svg",
+            "logo": "mario-neto/logo/logo_branco.png",
             "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
@@ -243,6 +243,11 @@ document.addEventListener("DOMContentLoaded", () => {
         setupNavbarScroll();
     } catch (e) {
         console.error("Failed setupNavbarScroll:", e);
+    }
+    try {
+        setupBackToTop();
+    } catch (e) {
+        console.error("Failed setupBackToTop:", e);
     }
     
     // Always unlock loader finally
@@ -836,6 +841,31 @@ function setupNavbarScroll() {
     
     window.addEventListener("scroll", checkScroll);
     checkScroll(); // Run once initially
+}
+
+// ------------------------------------------------------------
+// Back to Top Button Actions
+// ------------------------------------------------------------
+function setupBackToTop() {
+    const btn = document.getElementById("back-to-top");
+    if (!btn) return;
+    
+    // Toggle visible class depending on vertical scroll position
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+            btn.classList.add("visible");
+        } else {
+            btn.classList.remove("visible");
+        }
+    });
+    
+    // Scroll smoothly to top when clicked
+    btn.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 }
 
 
