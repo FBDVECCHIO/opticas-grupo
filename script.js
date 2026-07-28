@@ -31,9 +31,9 @@ const BRANDS_DATA = {
             "footer_bg": "#050a14",
             "title_color": "#ffffff",
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-            "font_name": "'Inter', sans-serif",
-            "logo": "mario-neto/logo/Mario Neto.jpeg",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
+            "font_name": "'Montserrat', sans-serif",
+            "logo": "mario-neto/logo/logo_branco.svg",
             "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
@@ -108,8 +108,8 @@ const BRANDS_DATA = {
             "footer_bg": "#f8fafc", // Very clean gray-blue light footer
             "title_color": "#075691", // Blue page titles
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap",
-            "font_name": "'Inter', sans-serif",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
+            "font_name": "'Montserrat', sans-serif",
             "logo": "conceicao/logo/preto.png", // Black logo on light backgrounds
             "logo_dark_bg": "conceicao/logo/branco.png",
             "canvas_style": "sapphire-light"
@@ -239,6 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Failed setupParallaxLenses:", e);
     }
     
+    try {
+        setupNavbarScroll();
+    } catch (e) {
+        console.error("Failed setupNavbarScroll:", e);
+    }
+    
     // Always unlock loader finally
     document.body.classList.remove("loading");
 });
@@ -290,30 +296,14 @@ function applyBrandConfig(config, brandKey) {
     const navLogo = document.getElementById("nav-logo");
     const footerLogo = document.getElementById("footer-logo");
     
-    const setLogo = (imgEl) => {
-        if (!imgEl) return;
-        if (brandKey === 'mario-neto') {
-            // White dynamic text logo
-            imgEl.style.display = "none";
-            let txtLogo = imgEl.parentNode.querySelector(".brand-text-logo");
-            if (!txtLogo) {
-                txtLogo = document.createElement("span");
-                txtLogo.className = "brand-text-logo";
-                txtLogo.textContent = "Mário Neto";
-                imgEl.parentNode.appendChild(txtLogo);
-            }
-            txtLogo.style.display = "inline-block";
-        } else {
-            // Standard image logo
-            imgEl.style.display = "inline-block";
-            imgEl.src = config.theme.logo;
-            const txtLogo = imgEl.parentNode.querySelector(".brand-text-logo");
-            if (txtLogo) txtLogo.style.display = "none";
-        }
-    };
-    
-    setLogo(navLogo);
-    setLogo(footerLogo);
+    if (navLogo) {
+        navLogo.style.display = "inline-block";
+        navLogo.src = config.theme.logo;
+    }
+    if (footerLogo) {
+        footerLogo.style.display = "inline-block";
+        footerLogo.src = config.theme.logo;
+    }
     
     const handleLogoError = (imgEl) => {
         imgEl.style.display = "none";
@@ -333,9 +323,9 @@ function applyBrandConfig(config, brandKey) {
     if (footerLogo) footerLogo.onerror = () => handleLogoError(footerLogo);
     
     // Hero background image loading (Full screen viewport)
-    const heroSection = document.querySelector(".hero-section");
-    if (heroSection) {
-        heroSection.style.backgroundImage = `url('${config.hero_image}')`;
+    const heroBgWrapper = document.querySelector(".hero-bg-wrapper");
+    if (heroBgWrapper) {
+        heroBgWrapper.style.backgroundImage = `url('${config.hero_image}')`;
     }
     
     // Texts loading
@@ -826,6 +816,26 @@ function setupParallaxLenses() {
             ring1.style.opacity = Math.max(0, initialOpacity - (scrolled / 600));
         }
     });
+}
+
+// ------------------------------------------------------------
+// Navbar Scroll Legibility Toggle
+// ------------------------------------------------------------
+function setupNavbarScroll() {
+    const navbar = document.querySelector(".navbar");
+    if (!navbar) return;
+    
+    // Toggle scrolled state class
+    const checkScroll = () => {
+        if (window.scrollY > 40) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+    };
+    
+    window.addEventListener("scroll", checkScroll);
+    checkScroll(); // Run once initially
 }
 
 
