@@ -153,14 +153,31 @@ let frameMaterial, metalMaterial, lensMaterial;
 // ------------------------------------------------------------
 function getActiveBrand() {
     const urlParams = new URLSearchParams(window.location.search);
-    let brandKey = urlParams.get('brand') || window.location.hash.substring(1);
+    let brandKey = (urlParams.get('brand') || window.location.hash.substring(1) || '').toLowerCase().trim();
     
     if (!brandKey) {
-        const host = window.location.hostname;
-        if (host.includes('conceicao')) {
+        const host = window.location.hostname.toLowerCase();
+        const href = window.location.href.toLowerCase();
+        
+        // 1. Check substring keyword matches
+        if (host.includes('conceicao') || href.includes('conceicao')) {
             brandKey = 'conceicao';
+        } else if (host.includes('mario') || href.includes('mario')) {
+            brandKey = 'mario-neto';
         } else {
-            brandKey = 'mario-neto'; // default
+            // 2. Fallback to exact config domain matches (supports Vercel mapping variations)
+            let matched = false;
+            for (const key in BRANDS_DATA) {
+                const brandDomain = BRANDS_DATA[key].domain.toLowerCase();
+                if (host.includes(brandDomain) || brandDomain.includes(host)) {
+                    brandKey = key;
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) {
+                brandKey = 'mario-neto'; // default fallback
+            }
         }
     }
     
