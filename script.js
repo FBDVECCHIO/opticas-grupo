@@ -45,7 +45,7 @@ const BRANDS_DATA = {
         },
         "unidades": [
             {
-                "nome": "Unidade Centro (Matriz)",
+                "nome": "Centro (Matriz)",
                 "endereco": "Rua Barão de Parnaíba, 429, Botafogo – Campinas/SP",
                 "whatsapp": "5519987061362",
                 "telefone": "(19) 3237-6891",
@@ -53,7 +53,7 @@ const BRANDS_DATA = {
                 "size": "large"
             },
             {
-                "nome": "Unidade Botafogo",
+                "nome": "Botafogo",
                 "endereco": "Rua Dr. Mascarenhas, 264, Botafogo – Campinas/SP",
                 "whatsapp": "5519981881302",
                 "telefone": "(19) 3235-2279",
@@ -61,7 +61,7 @@ const BRANDS_DATA = {
                 "size": "medium"
             },
             {
-                "nome": "Unidade Nova Campinas",
+                "nome": "Nova Campinas",
                 "endereco": "Av. Dr. Hermas Braga, 96, Nova Campinas – Campinas/SP",
                 "whatsapp": "5519997452138",
                 "telefone": "(19) 2042-1576",
@@ -69,7 +69,7 @@ const BRANDS_DATA = {
                 "size": "medium"
             },
             {
-                "nome": "Unidade Swiss Park",
+                "nome": "Swiss Park",
                 "endereco": "Av. Antônio Artioli, 570, Bloco B2, Loja 02, Swiss Park Office – Campinas/SP",
                 "whatsapp": "5519983728981",
                 "telefone": "",
@@ -77,7 +77,7 @@ const BRANDS_DATA = {
                 "size": "small"
             },
             {
-                "nome": "Unidade Shopping Dom Pedro",
+                "nome": "Shopping Dom Pedro",
                 "endereco": "Av. Guilherme Campos, 500, Jardim Santa Genebra – Campinas/SP",
                 "whatsapp": "5519989819172",
                 "telefone": "",
@@ -123,7 +123,7 @@ const BRANDS_DATA = {
         },
         "unidades": [
             {
-                "nome": "Unidade Conceição 1084",
+                "nome": "Conceição 1084",
                 "endereco": "Rua Exemplo Conceição, 1084 – Campinas/SP",
                 "whatsapp": "5519999999999",
                 "telefone": "(19) 3333-3333",
@@ -131,7 +131,7 @@ const BRANDS_DATA = {
                 "size": "large"
             },
             {
-                "nome": "Unidade Conceição 1109",
+                "nome": "Conceição 1109",
                 "endereco": "Rua Exemplo Conceição, 1109 – Campinas/SP",
                 "whatsapp": "5519999999999",
                 "telefone": "(19) 3333-3334",
@@ -290,8 +290,30 @@ function applyBrandConfig(config, brandKey) {
     const navLogo = document.getElementById("nav-logo");
     const footerLogo = document.getElementById("footer-logo");
     
-    if (navLogo) navLogo.src = config.theme.logo;
-    if (footerLogo) footerLogo.src = config.theme.logo;
+    const setLogo = (imgEl) => {
+        if (!imgEl) return;
+        if (brandKey === 'mario-neto') {
+            // White dynamic text logo
+            imgEl.style.display = "none";
+            let txtLogo = imgEl.parentNode.querySelector(".brand-text-logo");
+            if (!txtLogo) {
+                txtLogo = document.createElement("span");
+                txtLogo.className = "brand-text-logo";
+                txtLogo.textContent = "Mário Neto";
+                imgEl.parentNode.appendChild(txtLogo);
+            }
+            txtLogo.style.display = "inline-block";
+        } else {
+            // Standard image logo
+            imgEl.style.display = "inline-block";
+            imgEl.src = config.theme.logo;
+            const txtLogo = imgEl.parentNode.querySelector(".brand-text-logo");
+            if (txtLogo) txtLogo.style.display = "none";
+        }
+    };
+    
+    setLogo(navLogo);
+    setLogo(footerLogo);
     
     const handleLogoError = (imgEl) => {
         imgEl.style.display = "none";
