@@ -353,7 +353,7 @@ function applyBrandConfig(config, brandKey) {
         if (badgeYears) badgeYears.textContent = "Premium";
         if (statAnos) statAnos.textContent = "Qualidade";
     } else {
-        if (heroTitle) heroTitle.innerHTML = "Sua <em>visão</em> com o cuidado que você <em>merece</em>";
+        if (heroTitle) heroTitle.innerHTML = "Sua <em>visão</em> com o cuidado <br class='desktop-br'> que você <em>merece</em>";
         if (badgeYears) badgeYears.textContent = "90+";
         if (statAnos) statAnos.textContent = "1929";
     }

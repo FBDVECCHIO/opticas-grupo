@@ -1916,6 +1916,19 @@ body.conceicao-theme .back-to-top-btn:hover {
     background: var(--primary-color);
 }
 
+/* ------------------------------------------------------------ */
+/* Desktop line-break helper                                    */
+/* ------------------------------------------------------------ */
+.desktop-br {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .desktop-br {
+        display: none;
+    }
+}
+
 
 
 
