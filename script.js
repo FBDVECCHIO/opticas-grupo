@@ -235,6 +235,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     try {
+        setupParallaxLenses();
+    } catch (e) {
+        console.error("Failed setupParallaxLenses:", e);
+    }
+    
+    try {
         init3DViewer(brandKey);
     } catch (e) {
         console.error("Failed init3DViewer:", e);
@@ -1038,6 +1044,52 @@ window.change3DLens = function(type, buttonEl) {
         lensMaterial.roughness = 0.08;
     }
 };
+
+// ------------------------------------------------------------
+// Floating Parallax Lenses Transition System
+// ------------------------------------------------------------
+function setupParallaxLenses() {
+    const lens1 = document.querySelector(".lens-1");
+    const lens2 = document.querySelector(".lens-2");
+    const lens3 = document.querySelector(".lens-3");
+    const ring1 = document.querySelector(".ring-1");
+    
+    if (!lens1 && !lens2 && !lens3 && !ring1) return;
+    
+    // Initial opacity settings
+    const initialOpacity = 0.82;
+    if (lens1) lens1.style.opacity = initialOpacity;
+    if (lens2) lens2.style.opacity = initialOpacity;
+    if (lens3) lens3.style.opacity = initialOpacity;
+    if (ring1) ring1.style.opacity = initialOpacity;
+    
+    window.addEventListener("scroll", () => {
+        const scrolled = window.scrollY;
+        
+        // Multipliers create different speeds (parallax translation)
+        if (lens1) {
+            // Sobe mais rápido, rotaciona e desbota até sumir na segunda seção
+            lens1.style.transform = `translate3d(0, ${scrolled * -0.4}px, 0) rotate(${scrolled * 0.05}deg)`;
+            lens1.style.opacity = Math.max(0, initialOpacity - (scrolled / 450));
+        }
+        if (lens2) {
+            // Sobe mais devagar, maior presença vertical
+            lens2.style.transform = `translate3d(0, ${scrolled * -0.22}px, 0) rotate(${scrolled * -0.02}deg)`;
+            lens2.style.opacity = Math.max(0, initialOpacity - (scrolled / 750));
+        }
+        if (lens3) {
+            // Sobe rapidamente sumindo no início
+            lens3.style.transform = `translate3d(0, ${scrolled * -0.5}px, 0) rotate(${scrolled * 0.08}deg)`;
+            lens3.style.opacity = Math.max(0, initialOpacity - (scrolled / 350));
+        }
+        if (ring1) {
+            // Aro metálico com transição lenta
+            ring1.style.transform = `translate3d(0, ${scrolled * -0.3}px, 0) rotate(${scrolled * 0.03}deg)`;
+            ring1.style.opacity = Math.max(0, initialOpacity - (scrolled / 600));
+        }
+    });
+}
+
 
 
 

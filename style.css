@@ -569,7 +569,7 @@ body:not(.light-theme) .hero-card-badge {
 /* Bento Grid Section                                           */
 /* ------------------------------------------------------------ */
 .unidades-section, .sobre-section, .diferenciais-section, .marcas-section {
-    padding: 120px 0;
+    padding: 150px 0;
     position: relative;
 }
 
@@ -1379,9 +1379,9 @@ body.light-theme .marquee-container {
 /* Editorial Mixed Typography & Outlines                       */
 /* ------------------------------------------------------------ */
 .hero-title em {
-    font-family: 'Instrument Serif', serif;
+    font-family: 'Montserrat', sans-serif;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 300; /* Light italic variation for premium contrast */
     text-transform: none;
     color: var(--accent-color);
     padding-right: 4px;
@@ -1495,6 +1495,93 @@ body.conceicao-theme .aura-3 {
         transform: translate(-5%, -8%) scale(0.9);
     }
 }
+
+/* ------------------------------------------------------------ */
+/* Floating Glass Lenses Parallax Transition System            */
+/* ------------------------------------------------------------ */
+.floating-lenses-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.floating-lens {
+    position: absolute;
+    border-radius: 50%;
+    /* Realistic studio refraction reflection on lens */
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.02) 60%, rgba(33, 53, 103, 0.08) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06), inset 0 0 25px rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    will-change: transform, opacity;
+    animation: floating-hover-slow 16s infinite alternate ease-in-out;
+}
+
+body.mario-neto-theme .floating-lens {
+    background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.01) 60%, rgba(59, 130, 246, 0.1) 100%);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25), inset 0 0 20px rgba(255, 255, 255, 0.12);
+}
+
+.floating-lens-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 3.5px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    will-change: transform;
+    animation: floating-hover-slow 12s infinite alternate ease-in-out -4s;
+}
+
+body.mario-neto-theme .floating-lens-ring {
+    border-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.lens-1 {
+    width: 170px;
+    height: 170px;
+    top: 20%;
+    left: 6%;
+}
+
+.lens-2 {
+    width: 240px;
+    height: 240px;
+    top: 50%;
+    right: 6%;
+    animation-delay: -3s;
+}
+
+.lens-3 {
+    width: 110px;
+    height: 110px;
+    top: 80%;
+    left: 14%;
+    animation-delay: -6s;
+}
+
+.ring-1 {
+    width: 130px;
+    height: 130px;
+    top: 15%;
+    right: 26%;
+}
+
+@keyframes floating-hover-slow {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    100% {
+        transform: translate3d(0, -20px, 0) rotate(10deg);
+    }
+}
+
 
 
 
