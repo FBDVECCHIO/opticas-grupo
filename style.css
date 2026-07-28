@@ -402,7 +402,7 @@ body.mario-neto-theme .hero-tagline {
     margin-bottom: 25px;
     letter-spacing: -2px;
     color: var(--title-color);
-    max-width: 900px; /* Limits title to 2 lines */
+    max-width: 720px; /* Limits title to exactly 2 lines */
     margin-left: auto;
     margin-right: auto;
 }
@@ -755,16 +755,14 @@ body:not(.light-theme) .bento-card::before {
 }
 
 .bento-card h3 {
-    font-size: 16px; /* Reduced to fit in exactly one line */
+    font-size: 20px; /* Restored size for 2 lines */
     font-weight: 700;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 6px;
     color: var(--title-color);
-    white-space: nowrap; /* Limits to single line */
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* Wraps up to 2 lines */
 }
 
 .bento-card h3::before {
@@ -780,7 +778,7 @@ body:not(.light-theme) .bento-card::before {
 }
 
 .bento-card .address-details p {
-    font-size: 8px !important; /* Reduced to exactly 8px */
+    font-size: 10px !important; /* Increased to 10px */
     font-weight: 500;
     line-height: 1.4;
     color: var(--card-text-secondary);
@@ -1743,7 +1741,7 @@ body.light-theme .brand-text-logo {
 /* ------------------------------------------------------------ */
 .authenticity-seal {
     position: fixed;
-    top: 16px;
+    top: 52px; /* Lowered by ~1cm */
     right: 3%;
     z-index: 101; /* Floats on top right, next to menu capsule */
     width: 155px;
@@ -1787,7 +1785,7 @@ body.light-theme .authenticity-seal text {
 
 .seal-center {
     position: absolute;
-    font-size: 26px;
+    font-size: 38px; /* Enlarged shield emblem */
     display: flex;
     align-items: center;
     justify-content: center;
