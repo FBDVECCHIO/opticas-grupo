@@ -31,8 +31,8 @@ const BRANDS_DATA = {
             "footer_bg": "#050a14",
             "title_color": "#ffffff",
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
-            "font_name": "'Montserrat', sans-serif",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap",
+            "font_name": "'Inter', sans-serif",
             "logo": "mario-neto/logo/Mario Neto.jpeg",
             "canvas_style": "sapphire"
         },
@@ -108,8 +108,8 @@ const BRANDS_DATA = {
             "footer_bg": "#f8fafc", // Very clean gray-blue light footer
             "title_color": "#075691", // Blue page titles
             
-            "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap",
-            "font_name": "'Montserrat', sans-serif",
+            "font_family_url": "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&display=swap",
+            "font_name": "'Inter', sans-serif",
             "logo": "conceicao/logo/preto.png", // Black logo on light backgrounds
             "logo_dark_bg": "conceicao/logo/branco.png",
             "canvas_style": "sapphire-light"

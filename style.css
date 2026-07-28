@@ -27,7 +27,7 @@
 
 /* Mário Neto - Luxury Theme overrides */
 body.mario-neto-theme {
-    --title-font: 'Playfair Display', serif;
+    --title-font: 'Instrument Serif', serif;
     --body-bg: #091326; /* Fundo azul-safira oficial */
     --primary-color: #0b1a36;
     --secondary-color: #192e62;
@@ -183,27 +183,35 @@ body:not(.loading) {
 /* ------------------------------------------------------------ */
 /* Header & Navbar                                              */
 /* ------------------------------------------------------------ */
+/* Header & Navbar (Floating Capsule / Nav Pill) */
 .navbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    top: 24px; /* Suspended from the top */
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    width: 90%;
+    max-width: 820px;
     z-index: 100;
     background: var(--navbar-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--card-border);
+    border: 1px solid var(--card-border);
+    border-radius: 40px; /* Fully rounded capsule */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     transition: var(--transition-smooth);
+}
+
+body:not(.light-theme) .navbar {
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.35);
 }
 
 .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 90px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+    height: 64px; /* Fitter vertical spacing */
+    padding: 0 28px;
+    width: 100%;
 }
 
 .nav-logo-container {
@@ -213,7 +221,7 @@ body:not(.loading) {
 }
 
 .nav-logo {
-    max-height: 55px;
+    max-height: 38px; /* More compact logo height */
     width: auto;
     object-fit: contain;
     transition: var(--transition-smooth);
@@ -1206,7 +1214,7 @@ body.mario-neto-theme .custom-cursor-container.hovering .cursor-ring {
 .visual-3d-card {
     position: relative;
     width: 100%;
-    aspect-ratio: 1.1;
+    aspect-ratio: 0.92; /* Taller card to expand 3D presence */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1229,7 +1237,7 @@ body:not(.light-theme) .visual-3d-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    max-height: 80%;
+    max-height: 85%; /* Expand height */
     outline: none;
 }
 
@@ -1371,7 +1379,7 @@ body.light-theme .marquee-container {
 /* Editorial Mixed Typography & Outlines                       */
 /* ------------------------------------------------------------ */
 .hero-title em {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
     font-weight: 400;
     text-transform: none;
@@ -1392,6 +1400,102 @@ body.mario-neto-theme .hero-title em {
 body.mario-neto-theme .outline-text {
     -webkit-text-stroke: 1.5px #3b82f6;
 }
+
+/* ------------------------------------------------------------ */
+/* Ambient Aura Gradient Blobs Background (Liquid movement)   */
+/* ------------------------------------------------------------ */
+.aura-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+    filter: blur(120px);
+    opacity: 0.65;
+    transition: opacity 0.5s ease;
+}
+
+body.mario-neto-theme .aura-bg {
+    opacity: 0.8;
+}
+
+.aura-blob {
+    position: absolute;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    animation: drift-slow 28s infinite alternate ease-in-out;
+    will-change: transform, left, top;
+}
+
+/* Mário Neto default aura colors (deep sapphire, ciano, and indigo) */
+body.mario-neto-theme .aura-1 {
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, #10255c 0%, transparent 70%);
+    top: -15%;
+    left: -10%;
+}
+
+body.mario-neto-theme .aura-2 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+    bottom: -15%;
+    right: -10%;
+    animation-delay: -6s;
+}
+
+body.mario-neto-theme .aura-3 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+    top: 40%;
+    left: 45%;
+    animation-delay: -12s;
+}
+
+/* Conceição theme aura colors (soft light-blue, silver-cyan, light-teal) */
+body.conceicao-theme .aura-1 {
+    width: 650px;
+    height: 650px;
+    background: radial-gradient(circle, #e0f2fe 0%, transparent 70%);
+    top: -10%;
+    left: -5%;
+}
+
+body.conceicao-theme .aura-2 {
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, #ccfbf1 0%, transparent 70%);
+    bottom: -10%;
+    right: -5%;
+    animation-delay: -7s;
+}
+
+body.conceicao-theme .aura-3 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, #e0e7ff 0%, transparent 70%);
+    top: 35%;
+    left: 40%;
+    animation-delay: -14s;
+}
+
+@keyframes drift-slow {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(8%, 10%) scale(1.15);
+    }
+    100% {
+        transform: translate(-5%, -8%) scale(0.9);
+    }
+}
+
 
 
 
