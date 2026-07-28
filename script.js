@@ -199,6 +199,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const brandKey = getActiveBrand();
     const config = BRANDS_DATA[brandKey];
     
+    console.log("=== BRAND INITIALIZATION ===");
+    console.log("Resolved Brand:", brandKey);
+    console.log("Current Hostname:", window.location.hostname);
+    console.log("Current URL:", window.location.href);
+    console.log("============================");
+    
     const switcherBtn = document.getElementById(`btn-switch-${brandKey}`);
     if (switcherBtn) switcherBtn.classList.add('active');
     
