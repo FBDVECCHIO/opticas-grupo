@@ -1547,7 +1547,7 @@ body.mario-neto-theme .outline-text {
 }
 
 body.conceicao-theme .outline-text {
-    color: #64748b !important; /* Soft premium slate gray fill */
+    color: #555555 !important; /* Solid low-key charcoal gray */
     -webkit-text-stroke: none !important; /* Remove borders/outlines */
     font-weight: 800;
 }
