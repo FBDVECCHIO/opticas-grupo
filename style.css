@@ -187,10 +187,10 @@ body:not(.loading) {
 .navbar {
     position: fixed;
     top: 24px;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    width: 90%;
-    max-width: 820px;
+    left: 4%;
+    transform: none;
+    width: auto;
+    max-width: none;
     z-index: 100;
     background: transparent;
     backdrop-filter: none;
@@ -210,7 +210,7 @@ body:not(.light-theme) .navbar {
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--card-border);
     border-radius: 40px;
-    padding: 0 24px;
+    padding: 0 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -221,7 +221,7 @@ body.light-theme .navbar.scrolled {
 
 .nav-container {
     display: flex;
-    justify-content: center; /* Center links menu capsule */
+    justify-content: flex-start; /* Group logo and menu items on left */
     align-items: center;
     height: 64px;
     padding: 0;
@@ -229,13 +229,11 @@ body.light-theme .navbar.scrolled {
 }
 
 .nav-logo-container {
-    position: fixed;
-    top: 24px;
-    left: 4%;
-    z-index: 101; /* Floats freely on the left side of viewport */
+    position: static; /* Place back in standard nav capsule flow */
     display: flex;
     align-items: center;
-    height: 64px;
+    height: 100%;
+    margin-right: 20px; /* Spacing between logo and menu items */
 }
 
 .nav-logo {
@@ -1117,6 +1115,13 @@ body.conceicao-theme .footer-logo {
 }
 
 @media (max-width: 768px) {
+    .navbar {
+        left: 50% !important;
+        transform: translate3d(-50%, 0, 0) !important;
+        width: 90% !important;
+        max-width: 820px !important;
+    }
+    
     .nav-logo-container {
         position: static;
         height: auto;
