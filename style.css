@@ -1780,7 +1780,7 @@ body.light-theme .brand-text-logo {
 /* ------------------------------------------------------------ */
 .authenticity-seal {
     position: fixed;
-    top: 52px; /* Lowered by ~1cm */
+    top: 24px; /* Aligned with the top of the menu capsule */
     right: 3%;
     z-index: 101; /* Floats on top right, next to menu capsule */
     width: 155px;
