@@ -114,12 +114,12 @@ const BRANDS_DATA = {
             "logo_dark_bg": "conceicao/logo/branco.png",
             "canvas_style": "sapphire-light"
         },
-        "history": "Tradição e excelência no cuidado visual desde 1956. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida. São mais de 70 anos cuidando de sua visão.",
-        "fundacao": "1956",
+        "history": "Tradição e excelência no cuidado visual desde 1948. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida. São mais de 75 anos cuidando de sua visão.",
+        "fundacao": "1948",
         "stats": {
             "modelos": "1.500+",
             "lojas": "2",
-            "anos": "70+"
+            "anos": "75+"
         },
         "unidades": [
             {
@@ -375,9 +375,9 @@ function applyBrandConfig(config, brandKey) {
         if (heroTagline) heroTagline.textContent = "Cuidado Visual Completo";
         if (heroTitle) heroTitle.innerHTML = "Excelência Óptica & <span class='outline-text'>Atendimento Familiar</span>";
         if (heroSubtitle) heroSubtitle.textContent = "Sua visão tratada por profissionais experientes com lentes de alta tecnologia.";
-        if (badgeYears) badgeYears.textContent = "70+";
-        if (statAnos) statAnos.textContent = "1956";
-        if (sealTextPath) sealTextPath.textContent = "MAIS DE 70 ANOS CUIDANDO DA VISÃO DOS BRASILEIROS •";
+        if (badgeYears) badgeYears.textContent = "75+";
+        if (statAnos) statAnos.textContent = "1948";
+        if (sealTextPath) sealTextPath.textContent = "MAIS DE 75 ANOS CUIDANDO DA VISÃO DOS BRASILEIROS •";
     } else {
         if (heroTitle) heroTitle.innerHTML = "Sua <em>visão</em> com o cuidado <br class='desktop-br'> que você <em>merece</em>";
         if (badgeYears) badgeYears.textContent = "90+";
