@@ -187,10 +187,10 @@ body:not(.loading) {
 .navbar {
     position: fixed;
     top: 24px;
-    left: 4%;
-    transform: none;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
     width: auto;
-    max-width: none;
+    max-width: 90%;
     z-index: 100;
     background: transparent;
     backdrop-filter: none;
