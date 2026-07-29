@@ -1220,32 +1220,8 @@ body.conceicao-theme .footer-logo {
 /* ------------------------------------------------------------ */
 .reveal-on-scroll {
     opacity: 0;
-    transform: translateY(32px);
-    filter: blur(8px);
-    letter-spacing: 2px;
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 1s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform, filter, letter-spacing;
+    will-change: opacity, transform, filter;
 }
-
-.reveal-on-scroll.active {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-    letter-spacing: normal;
-}
-
-/* Cascaded delays for grid structures */
-.bento-card:nth-child(2) { transition-delay: 0.08s; }
-.bento-card:nth-child(3) { transition-delay: 0.16s; }
-.bento-card:nth-child(4) { transition-delay: 0.24s; }
-.bento-card:nth-child(5) { transition-delay: 0.32s; }
-
-.diferencial-card:nth-child(2) { transition-delay: 0.12s; }
-.diferencial-card:nth-child(3) { transition-delay: 0.24s; }
-
-.marca-item:nth-child(2) { transition-delay: 0.08s; }
-.marca-item:nth-child(3) { transition-delay: 0.16s; }
-.marca-item:nth-child(4) { transition-delay: 0.24s; }
 
 /* ------------------------------------------------------------ */
 /* Image Card & Hover Zoom Effects                             */
@@ -1967,6 +1943,29 @@ body.conceicao-theme .back-to-top-btn:hover {
     .desktop-br {
         display: none;
     }
+}
+
+/* ------------------------------------------------------------ */
+/* Lenis Smooth Scroll Helper Styles                            */
+/* ------------------------------------------------------------ */
+html.lenis, html.lenis body {
+    height: auto;
+}
+
+.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis-scrolling iframe {
+    pointer-events: none;
 }
 
 

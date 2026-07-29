@@ -12,7 +12,7 @@ const BRANDS_DATA = {
     "mario-neto": {
         "brand_name": "Óptica Mário Neto",
         "domain": "www.opticamarioneto.com.br",
-        "hero_image": "mario-neto/glasses_luxury.jpg?v=5",
+        "hero_image": "mario-neto/glasses_luxury.jpg?v=6",
         "theme": {
             "body_bg": "#091326", // Deep Sapphire Blue of Logo
             "text_color": "#ffffff",
@@ -33,7 +33,7 @@ const BRANDS_DATA = {
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "mario-neto/logo/logo_branco.png?v=5",
+            "logo": "mario-neto/logo/logo_branco.png?v=6",
             "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
@@ -89,7 +89,7 @@ const BRANDS_DATA = {
     "conceicao": {
         "brand_name": "Óptica Conceição",
         "domain": "www.opticaconceicao.com.br",
-        "hero_image": "conceicao/glasses_clean.jpg?v=5",
+        "hero_image": "conceicao/glasses_clean.jpg?v=6",
         "theme": {
             "body_bg": "#ffffff", // Light Theme (White background)
             "text_color": "#1e293b", // Slate-800 for body readability
@@ -110,8 +110,8 @@ const BRANDS_DATA = {
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "conceicao/logo/preto.png?v=5", // Black logo on light backgrounds
-            "logo_dark_bg": "conceicao/logo/branco.png?v=5",
+            "logo": "conceicao/logo/preto.png?v=6", // Black logo on light backgrounds
+            "logo_dark_bg": "conceicao/logo/branco.png?v=6",
             "canvas_style": "sapphire-light"
         },
         "history": "Tradição e excelência no cuidado visual desde 1948. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida. São mais de 75 anos cuidando de sua visão.",
@@ -205,6 +205,33 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Current URL:", window.location.href);
     console.log("============================");
     
+    // Registo do plugin GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Inicialização do Lenis Smooth Scroll
+    try {
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 1.0
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Sincronização Lenis + GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
+        
+        ScrollTrigger.clearScrollMemory();
+        ScrollTrigger.defaults({ limitCallbacks: true });
+    } catch (e) {
+        console.error("Failed to initialize Lenis:", e);
+    }
+
     const switcherBtn = document.getElementById(`btn-switch-${brandKey}`);
     if (switcherBtn) switcherBtn.classList.add('active');
     
@@ -231,12 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setupBentoGlow();
     } catch (e) {
         console.error("Failed setupBentoGlow:", e);
-    }
-    
-    try {
-        setupScrollAnimations();
-    } catch (e) {
-        console.error("Failed setupScrollAnimations:", e);
     }
     
     try {
@@ -275,6 +296,13 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Always unlock loader finally
     document.body.classList.remove("loading");
+    
+    // Executar timeline cinemática do Hero
+    try {
+        setupHeroIntro();
+    } catch (e) {
+        console.error("Failed setupHeroIntro:", e);
+    }
 });
 
 // ------------------------------------------------------------
@@ -492,23 +520,117 @@ function setupBentoGlow() {
 // Scroll Animation Trigger (UX/UI Smooth Entrance)
 // ------------------------------------------------------------
 function setupScrollAnimations() {
-    const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.1
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("active");
+    // Limpar ScrollTriggers anteriores para evitar vazamento de memória na troca de marcas
+    ScrollTrigger.getAll().forEach(t => t.kill());
+
+    // 1. Revelação cinemática de textos e elementos genéricos
+    document.querySelectorAll(".reveal-on-scroll:not(.bento-card):not(.diferencial-card):not(.marca-item):not(.unidades-wrapper .glass-card)").forEach(el => {
+        gsap.fromTo(el, 
+            { opacity: 0, y: 40, filter: "blur(6px)" },
+            {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                duration: 1.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
             }
-        });
-    }, observerOptions);
-    
-    document.querySelectorAll(".reveal-on-scroll").forEach(el => {
-        observer.observe(el);
+        );
     });
+
+    // 2. Revelação sequencial (stagger) dos cards da Bento Grid
+    const bentoGrid = document.querySelector(".bento-grid");
+    if (bentoGrid) {
+        const cards = bentoGrid.querySelectorAll(".bento-card");
+        gsap.fromTo(cards,
+            { opacity: 0, y: 50, filter: "blur(6px)", scale: 0.96 },
+            {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                scale: 1,
+                duration: 1.2,
+                stagger: 0.15,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: bentoGrid,
+                    start: "top 82%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+    }
+
+    // 3. Revelação sequencial dos Diferenciais
+    const diferenciaisSec = document.getElementById("diferenciais");
+    if (diferenciaisSec) {
+        const cards = diferenciaisSec.querySelectorAll(".diferencial-card");
+        gsap.fromTo(cards,
+            { opacity: 0, y: 40, filter: "blur(5px)" },
+            {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                duration: 1.0,
+                stagger: 0.15,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: diferenciaisSec,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+    }
+
+    // 4. Revelação sequencial das Marcas
+    const marcasGrid = document.querySelector(".marcas-grid");
+    if (marcasGrid) {
+        const items = marcasGrid.querySelectorAll(".marca-item");
+        gsap.fromTo(items,
+            { opacity: 0, y: 30, scale: 0.9 },
+            {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.8,
+                stagger: 0.08,
+                ease: "back.out(1.2)",
+                scrollTrigger: {
+                    trigger: marcasGrid,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+    }
+    
+    // 5. Revelação sequencial dos Cards de Lojas (Unidades)
+    const unidadesWrapper = document.querySelector(".unidades-wrapper");
+    if (unidadesWrapper) {
+        const shopCards = unidadesWrapper.querySelectorAll(".glass-card");
+        gsap.fromTo(shopCards,
+            { opacity: 0, y: 50, filter: "blur(6px)", scale: 0.95 },
+            {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                scale: 1,
+                duration: 1.2,
+                stagger: 0.15,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: unidadesWrapper,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
+            }
+        );
+    }
 }
 
 // ------------------------------------------------------------
@@ -816,38 +938,63 @@ function setupParallaxLenses() {
     
     if (!lens1 && !lens2 && !lens3 && !ring1) return;
     
-    // Initial opacity settings
-    const initialOpacity = 0.82;
-    if (lens1) lens1.style.opacity = initialOpacity;
-    if (lens2) lens2.style.opacity = initialOpacity;
-    if (lens3) lens3.style.opacity = initialOpacity;
-    if (ring1) ring1.style.opacity = initialOpacity;
-    
-    window.addEventListener("scroll", () => {
-        const scrolled = window.scrollY;
-        
-        // Multipliers create different speeds (parallax translation)
-        if (lens1) {
-            // Sobe mais rápido, rotaciona e desbota até sumir na segunda seção
-            lens1.style.transform = `translate3d(0, ${scrolled * -0.4}px, 0) rotate(${scrolled * 0.05}deg)`;
-            lens1.style.opacity = Math.max(0, initialOpacity - (scrolled / 450));
-        }
-        if (lens2) {
-            // Sobe mais devagar, maior presença vertical
-            lens2.style.transform = `translate3d(0, ${scrolled * -0.22}px, 0) rotate(${scrolled * -0.02}deg)`;
-            lens2.style.opacity = Math.max(0, initialOpacity - (scrolled / 750));
-        }
-        if (lens3) {
-            // Sobe rapidamente sumindo no início
-            lens3.style.transform = `translate3d(0, ${scrolled * -0.5}px, 0) rotate(${scrolled * 0.08}deg)`;
-            lens3.style.opacity = Math.max(0, initialOpacity - (scrolled / 350));
-        }
-        if (ring1) {
-            // Aro metálico com transição lenta
-            ring1.style.transform = `translate3d(0, ${scrolled * -0.3}px, 0) rotate(${scrolled * 0.03}deg)`;
-            ring1.style.opacity = Math.max(0, initialOpacity - (scrolled / 600));
-        }
-    });
+    // Configurações de Parallax Cinemático scrubbed com GSAP
+    if (lens1) {
+        gsap.to(lens1, {
+            yPercent: -45,
+            xPercent: 15,
+            rotation: 60,
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1.2
+            }
+        });
+    }
+    if (lens2) {
+        gsap.to(lens2, {
+            yPercent: -25,
+            xPercent: -10,
+            rotation: -40,
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1.5
+            }
+        });
+    }
+    if (lens3) {
+        gsap.to(lens3, {
+            yPercent: -60,
+            xPercent: -20,
+            rotation: 90,
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1.0
+            }
+        });
+    }
+    if (ring1) {
+        gsap.to(ring1, {
+            yPercent: -35,
+            xPercent: 5,
+            rotation: 30,
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".hero",
+                start: "top top",
+                end: "bottom top",
+                scrub: 1.4
+            }
+        });
+    }
 }
 
 // ------------------------------------------------------------
@@ -893,6 +1040,36 @@ function setupBackToTop() {
             behavior: "smooth"
         });
     });
+}
+
+// ------------------------------------------------------------
+// Timeline de Entrada Cinematográfica (Hero Load Intro)
+// ------------------------------------------------------------
+function setupHeroIntro() {
+    // 1. Configurar estados iniciais (para evitar FOUC/piscadas)
+    gsap.set(".navbar", { y: -50, opacity: 0 });
+    gsap.set(".hero-title", { opacity: 0, y: 35, filter: "blur(7px)" });
+    gsap.set(".hero-subtitle", { opacity: 0, y: 22, filter: "blur(5px)" });
+    gsap.set(".hero-slogan", { opacity: 0, y: 15 });
+    gsap.set(".btn-whatsapp-cta", { opacity: 0, scale: 0.88 });
+    gsap.set(".lens-1, .lens-2, .lens-3, .ring-1", { opacity: 0, scale: 0.65, rotation: -25 });
+
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    // 2. Executar sequência cronológica
+    tl.to(".navbar", { y: 0, opacity: 1, duration: 1.2, delay: 0.15 })
+      .to(".hero-title", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.3 }, "-=0.85")
+      .to(".hero-subtitle", { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1 }, "-=0.95")
+      .to(".hero-slogan", { opacity: 0.82, y: 0, duration: 0.85 }, "-=0.85")
+      .to(".btn-whatsapp-cta", { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.6)" }, "-=0.75")
+      .to(".lens-1, .lens-2, .lens-3, .ring-1", {
+          opacity: 0.82,
+          scale: 1,
+          rotation: 0,
+          duration: 1.6,
+          stagger: 0.15,
+          ease: "elastic.out(1.15, 0.78)"
+      }, "-=0.95");
 }
 
 
