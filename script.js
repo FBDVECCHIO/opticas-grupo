@@ -12,7 +12,7 @@ const BRANDS_DATA = {
     "mario-neto": {
         "brand_name": "Óptica Mário Neto",
         "domain": "www.opticamarioneto.com.br",
-        "hero_image": "mario-neto/glasses_luxury.jpg?v=6",
+        "hero_image": "mario-neto/glasses_luxury.jpg?v=7",
         "theme": {
             "body_bg": "#091326", // Deep Sapphire Blue of Logo
             "text_color": "#ffffff",
@@ -33,7 +33,7 @@ const BRANDS_DATA = {
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "mario-neto/logo/logo_branco.png?v=6",
+            "logo": "mario-neto/logo/logo_branco.png?v=7",
             "canvas_style": "sapphire"
         },
         "history": "Carregamos conosco uma história de parceria que é transmitida de geração para geração com os valores da honestidade, paixão e confiança nos guiando rumo ao futuro. Ajudamos as pessoas a enxergarem melhor desde 1929. São mais de 90 anos buscando sempre o melhor para nossos clientes, entendendo e atendendo suas necessidades.",
@@ -89,7 +89,7 @@ const BRANDS_DATA = {
     "conceicao": {
         "brand_name": "Óptica Conceição",
         "domain": "www.opticaconceicao.com.br",
-        "hero_image": "conceicao/glasses_clean.jpg?v=6",
+        "hero_image": "conceicao/glasses_clean.jpg?v=7",
         "theme": {
             "body_bg": "#ffffff", // Light Theme (White background)
             "text_color": "#1e293b", // Slate-800 for body readability
@@ -110,8 +110,8 @@ const BRANDS_DATA = {
             
             "font_family_url": "https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap",
             "font_name": "'Montserrat', sans-serif",
-            "logo": "conceicao/logo/preto.png?v=6", // Black logo on light backgrounds
-            "logo_dark_bg": "conceicao/logo/branco.png?v=6",
+            "logo": "conceicao/logo/preto.png?v=7", // Black logo on light backgrounds
+            "logo_dark_bg": "conceicao/logo/branco.png?v=7",
             "canvas_style": "sapphire-light"
         },
         "history": "Tradição e excelência no cuidado visual desde 1948. A Óptica Conceição destaca-se pelo compromisso e atendimento próximo de cada cliente, proporcionando as melhores armações e a mais avançada tecnologia em lentes sob medida. São mais de 75 anos cuidando de sua visão.",
