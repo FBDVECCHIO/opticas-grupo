@@ -1547,9 +1547,17 @@ body.mario-neto-theme .outline-text {
 }
 
 body.conceicao-theme .outline-text {
-    color: #555555 !important; /* Solid low-key charcoal gray */
-    -webkit-text-stroke: none !important; /* Remove borders/outlines */
+    color: #213567 !important; /* Solid sapphire blue of logo */
+    -webkit-text-stroke: none !important; /* Remove borders/outlines (no wireframe) */
     font-weight: 800;
+}
+
+body.conceicao-theme .hero-tagline {
+    color: #64748b !important; /* Medium slate gray tagline */
+}
+
+body.conceicao-theme .hero-title {
+    color: #000000 !important; /* Solid black for "Excelência Óptica &" */
 }
 
 /* ------------------------------------------------------------ */
