@@ -1861,6 +1861,10 @@ body.conceicao-theme .seal-center {
     animation: bg-breathing-zoom 32s infinite alternate ease-in-out;
 }
 
+body.conceicao-theme .hero-bg-wrapper {
+    background-position: center 25%; /* Focalize the lenses at the upper part of portrait image */
+}
+
 .hero-bg-overlay-spotlight {
     position: absolute;
     top: 0;
