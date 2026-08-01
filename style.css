@@ -1862,7 +1862,7 @@ body.conceicao-theme .seal-center {
 }
 
 body.conceicao-theme .hero-bg-wrapper {
-    background-position: center 25%; /* Focalize the lenses at the upper part of portrait image */
+    background-position: center; /* Center alignment is perfect for diagonal framing */
 }
 
 .hero-bg-overlay-spotlight {
